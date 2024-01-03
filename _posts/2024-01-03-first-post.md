@@ -29,6 +29,4 @@ int main(){
 
 到滴是哪里错了防御计划更富有
 
-
-
-![Screen Shot 2022-04-03 at 11.46.41 AM](../assets/blog_res/2024-01-03-first-post.assets/Screen Shot 2022-04-03 at 11.46.41 AM.png)
+![image-20240103222822764](../assets/blog_res/2024-01-03-first-post.assets/image-20240103222822764.jpg)
