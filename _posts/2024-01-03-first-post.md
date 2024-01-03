@@ -25,4 +25,6 @@ int main(){
 }
 ```
 
-![image-20240103202245179](../assets/blog_res/2024-01-03-first-post.assets/image-20240103202245179.png)
+![](../assets/blog_res/2024-01-03-first-post.assets/image-20240103202245179.png)
+
+一年一度的春节要到了
