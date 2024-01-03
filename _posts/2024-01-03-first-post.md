@@ -30,3 +30,7 @@ int main(){
 <img src="2024-01-03-first-post/image-20240103205612351.png" alt="image-20240103205612351" style="zoom:67%;" /
 
 tr43rt4fewrferf  
+
+<img src="2024-01-03-first-post/image-20240103211154346.png" alt="image-20240103211154346" style="zoom:25%;" /
+
+![image-20240103211358898](../assets/blog_res/2024-01-03-first-post.assets/image-20240103211358898.png)
