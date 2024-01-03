@@ -35,4 +35,4 @@ tr43rt4fewrferf
 
 ![image-20240103211358898](../assets/blog_res/2024-01-03-first-post.assets/image-20240103211358898.png)
 
-![image-20240103211559907](../assets/blog_res/2024-01-03-first-post.assets/image-20240103211559907.png)
+<img src="../assets/blog_res/2024-01-03-first-post.assets/image-20240103211559907.png" alt="image-20240103211559907" style="zoom:33%;" />
