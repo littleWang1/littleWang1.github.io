@@ -12,18 +12,17 @@ comments: true
 math: false
 mermaid: true
 
-
 ---
 
 # 感谢关注～ 
 
-这里可以放代码
+# 大标题
 
 ```c++
 //代码片段
 int main(){
-  hello world;
+  hello world;
 }
 ```
 
-fesfffffffffffffffffff
+(../assets/blog_res/2021-03-30-hello-world.assets/image-20240103200718515.png)
