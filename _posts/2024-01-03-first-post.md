@@ -27,4 +27,3 @@ int main(){
 
 一年一度的春节要到了
 
-![image-20240103213136177](./../assets/blog_res/2024-01-03-first-post.assets/image-20240103213136177.png
