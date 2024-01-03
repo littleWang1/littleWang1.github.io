@@ -31,3 +31,4 @@ int main(){
 
 
 
+![Screen Shot 2022-04-03 at 11.46.41 AM](./../assets/blog_res/2024-01-03-first-post.assets/Screen Shot 2022-04-03 at 11.46.41 AM.png)
