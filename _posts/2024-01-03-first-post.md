@@ -25,6 +25,8 @@ int main(){
 }
 ```
 
-![](../assets/blog_res/2024-01-03-first-post.assets/image-20240103202245179.png)
-
 一年一度的春节要到了
+
+<img src="./2024-01-03-first-post/image-20240103205612351.png" alt="image-20240103205612351" style="zoom:67%;" />
+
+tr43rt4
