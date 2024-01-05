@@ -28,5 +28,3 @@ int main(){
 一年一度的春节要到了
 
 到滴是哪里错了防御计划更富有
-
-![image-20240103222822764](../assets/blog_res/2024-01-03-first-post.assets/image-20240103222822764.jpg)
