@@ -13,4 +13,5 @@ mermaid: true
 
 # 1.后端搭建环境
 
-![image-20240106192202674](../assets/blog_res/2024-01-06-SpringBoot+SSM.assets/image-20240106192202674.png)
+![image-20240106192202674](../assets/blog_res/2024-01-06-SpringBoot+SSM.assets/1.png)
+
