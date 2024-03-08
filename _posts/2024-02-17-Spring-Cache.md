@@ -1,7 +1,7 @@
 ---
-title: 缓存菜品
+title: Spring-Cache
 date: 2024-02-17 10:34:00 +0800
-categories: [苍穹外卖项目实战]
+categories: [随笔]
 tags: [学习]
 pin: true
 author: superWang
