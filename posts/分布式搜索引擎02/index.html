@@ -1,0 +1,1337 @@
+<!DOCTYPE html><html lang="zh-CN" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7"><meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="viewport" content="width=device-width, user-scalable=no initial-scale=1, shrink-to-fit=no, viewport-fit=cover" ><meta name="generator" content="Jekyll v4.3.3" /><meta property="og:title" content="分布式搜索引擎02" /><meta name="author" content="superWang" /><meta property="og:locale" content="zh_CN" /><meta name="description" content="分布式搜索引擎02" /><meta property="og:description" content="分布式搜索引擎02" /><link rel="canonical" href="/posts/%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E02/" /><meta property="og:url" content="/posts/%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E02/" /><meta property="og:site_name" content="小牛" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2024-03-12T02:34:00+00:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="分布式搜索引擎02" /><meta name="twitter:site" content="@twitter_username" /><meta name="twitter:creator" content="@superWang" /> <script type="application/ld+json"> {"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"superWang"},"dateModified":"2024-03-12T02:34:00+00:00","datePublished":"2024-03-12T02:34:00+00:00","description":"分布式搜索引擎02","headline":"分布式搜索引擎02","mainEntityOfPage":{"@type":"WebPage","@id":"/posts/%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E02/"},"url":"/posts/%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E02/"}</script><title>分布式搜索引擎02 | 小牛</title><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/site.webmanifest"><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico"><meta name="apple-mobile-web-app-title" content="小牛"><meta name="application-name" content="小牛"><meta name="msapplication-TileColor" content="#da532c"><meta name="msapplication-config" content="/assets/img/favicons/browserconfig.xml"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://fonts.googleapis.com" ><link rel="dns-prefetch" href="https://fonts.googleapis.com" ><link rel="preconnect" href="https://cdn.jsdelivr.net" ><link rel="dns-prefetch" href="https://cdn.jsdelivr.net" ><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css"><link rel="stylesheet" href="/assets/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tocbot@4.20.1/dist/tocbot.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup@1/dist/magnific-popup.min.css"> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script type="text/javascript"> class ModeToggle { static get MODE_KEY() { return "mode"; } static get MODE_ATTR() { return "data-mode"; } static get DARK_MODE() { return "dark"; } static get LIGHT_MODE() { return "light"; } static get ID() { return "mode-toggle"; } constructor() { if (this.hasMode) { if (this.isDarkMode) { if (!this.isSysDarkPrefer) { this.setDark(); } } else { if (this.isSysDarkPrefer) { this.setLight(); } } } let self = this; /* always follow the system prefers */ this.sysDarkPrefers.addEventListener('change', () => { if (self.hasMode) { if (self.isDarkMode) { if (!self.isSysDarkPrefer) { self.setDark(); } } else { if (self.isSysDarkPrefer) { self.setLight(); } } self.clearMode(); } self.notify(); }); } /* constructor() */ get sysDarkPrefers() { return window.matchMedia("(prefers-color-scheme: dark)"); } get isSysDarkPrefer() { return this.sysDarkPrefers.matches; } get isDarkMode() { return this.mode === ModeToggle.DARK_MODE; } get isLightMode() { return this.mode === ModeToggle.LIGHT_MODE; } get hasMode() { return this.mode != null; } get mode() { return sessionStorage.getItem(ModeToggle.MODE_KEY); } /* get the current mode on screen */ get modeStatus() { if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer)) { return ModeToggle.DARK_MODE; } else { return ModeToggle.LIGHT_MODE; } } setDark() { $('html').attr(ModeToggle.MODE_ATTR, ModeToggle.DARK_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE); } setLight() { $('html').attr(ModeToggle.MODE_ATTR, ModeToggle.LIGHT_MODE); sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE); } clearMode() { $('html').removeAttr(ModeToggle.MODE_ATTR); sessionStorage.removeItem(ModeToggle.MODE_KEY); } /* Notify another plugins that the theme mode has changed */ notify() { window.postMessage({ direction: ModeToggle.ID, message: this.modeStatus }, "*"); } flipMode() { if (this.hasMode) { if (this.isSysDarkPrefer) { if (this.isLightMode) { this.clearMode(); } else { this.setLight(); } } else { if (this.isDarkMode) { this.clearMode(); } else { this.setDark(); } } } else { if (this.isSysDarkPrefer) { this.setLight(); } else { this.setDark(); } } this.notify(); } /* flipMode() */ } /* ModeToggle */ const modeToggle = new ModeToggle(); </script><body data-topbar-visible="true"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" class="mx-auto"> <img src="/assets/config/avatar.jpg" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title"> <a href="/">小牛</a></div><div class="site-subtitle font-italic">这里是小牛的博客～</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>首页</span> </a><li class="nav-item"> <a href="/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>分类</span> </a><li class="nav-item"> <a href="/tags/" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>标签</span> </a><li class="nav-item"> <a href="/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>归档</span> </a><li class="nav-item"> <a href="/about/" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>关于</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center"> <button class="mode-toggle btn" aria-label="Switch Mode"> <i class="fas fa-adjust"></i> </button> <span class="icon-border"></span> <a href="https://github.com/littleWang1" aria-label="github" target="_blank" rel="noopener noreferrer"> <i class="fab fa-github"></i> </a> <a href="https://twitter.com/twitter_username" aria-label="twitter" target="_blank" rel="noopener noreferrer"> <i class="fab fa-twitter"></i> </a> <a href="javascript:location.href = 'mailto:' + ['1657498912','qq.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="/feed.xml" aria-label="rss" > <i class="fas fa-rss"></i> </a></div></div><div id="topbar-wrapper"><div id="topbar" class="container d-flex align-items-center justify-content-between h-100 pl-3 pr-3 pl-md-4 pr-md-4"> <span id="breadcrumb"> <span> <a href="/"> 首页 </a> </span> <span>分布式搜索引擎02</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> 文章</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" autocomplete="off" placeholder="搜索..."> </span> <span id="search-cancel" >取消</span></div></div><div id="main-wrapper" class="d-flex justify-content-center"><div id="main" class="container pl-xl-4 pr-xl-4"><div class="row"><div id="core-wrapper" class="col-12 col-lg-11 col-xl-9 pr-xl-4"><div class="post pl-1 pr-1 pl-md-2 pr-md-2"><h1 data-toc-skip>分布式搜索引擎02</h1><div class="post-meta text-muted"> <span> 发表于 <em class="" data-ts="1710210840" data-df="YYYY/MM/DD" data-toggle="tooltip" data-placement="bottom"> 2024/03/12 </em> </span><div class="d-flex justify-content-between"> <span> 作者 <em> <a href=""></a> </em> </span><div> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="10299 字"> <em>57 分钟</em>阅读</span></div></div></div><div class="post-content"><h1 id="分布式搜索引擎02">分布式搜索引擎02</h1><p>在昨天的学习中，我们已经导入了大量数据到elasticsearch中，实现了elasticsearch的数据存储功能。但elasticsearch最擅长的还是搜索和数据分析。</p><p>所以今天，我们研究下elasticsearch的数据搜索功能。我们会分别使用<strong>DSL</strong>和<strong>RestClient</strong>实现搜索。</p><h1 id="0学习目标">0.学习目标</h1><h1 id="1dsl查询文档">1.DSL查询文档</h1><p>elasticsearch的查询依然是基于JSON风格的DSL来实现的。</p><h2 id="11dsl查询分类"><span class="mr-2">1.1.DSL查询分类</span><a href="#11dsl查询分类" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>Elasticsearch提供了基于JSON的DSL（<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html">Domain Specific Language</a>）来定义查询。常见的查询类型包括：</p><ul><li><p><strong>查询所有</strong>：查询出所有数据，一般测试用。例如：match_all</p><li><strong>全文检索（full text）查询</strong>：利用分词器对用户输入内容分词，然后去倒排索引库中匹配。例如：<ul><li>match_query<li>multi_match_query</ul><li><strong>精确查询</strong>：根据精确词条值查找数据，一般是查找keyword、数值、日期、boolean等类型字段。例如：<ul><li>ids<li>range<li>term</ul><li><strong>地理（geo）查询</strong>：根据经纬度查询。例如：<ul><li>geo_distance<li>geo_bounding_box</ul><li><strong>复合（compound）查询</strong>：复合查询可以将上述各种查询条件组合起来，合并查询条件。例如：<ul><li>bool<li>function_score</ul></ul><p>查询的语法基本一致：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"查询类型"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"查询条件"</span><span class="p">:</span><span class="err"> </span><span class="s2">"条件值"</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>我们以查询所有为例，其中：</p><ul><li>查询类型为match_all<li>没有查询条件</ul><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre><span class="err">//</span><span class="w"> </span><span class="err">查询所有</span><span class="w">
+</span><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"match_all"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>其它查询无非就是<strong>查询类型</strong>、<strong>查询条件</strong>的变化。</p><h2 id="12全文检索查询"><span class="mr-2">1.2.全文检索查询</span><a href="#12全文检索查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><h3 id="121使用场景"><span class="mr-2">1.2.1.使用场景</span><a href="#121使用场景" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>全文检索查询的基本流程如下：</p><ul><li>对用户搜索的内容做分词，得到词条<li>根据词条去倒排索引库中匹配，得到文档id<li>根据文档id找到文档，返回给用户</ul><p>比较常用的场景包括：</p><ul><li>商城的输入框搜索<li>百度输入框搜索</ul><p>例如京东：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721165326938.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721165326938.png" alt="image-20210721165326938" class="lazyload" data-proofer-ignore></a></p><p>因为是拿着词条去匹配，因此参与搜索的字段也必须是可分词的text类型的字段。</p><h3 id="122基本语法"><span class="mr-2">1.2.2.基本语法</span><a href="#122基本语法" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>常见的全文检索查询包括：</p><ul><li>match查询：单字段查询<li>multi_match查询：多字段查询，任意一个字段符合条件就算符合查询条件</ul><p>match查询语法如下：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre><td class="rouge-code"><pre><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"match"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"FIELD"</span><span class="p">:</span><span class="err"> </span><span class="s2">"TEXT"</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>mulit_match语法如下：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre><td class="rouge-code"><pre><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"multi_match"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="s2">"TEXT"</span><span class="p">,</span><span class="w">
+</span><span class="err">      </span><span class="nl">"fields"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="s2">"FIELD1"</span><span class="p">,</span><span class="err"> </span><span class="s2">" FIELD12"</span><span class="p">]</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><h3 id="123示例"><span class="mr-2">1.2.3.示例</span><a href="#123示例" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>match查询示例：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721170455419.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721170455419.png" alt="image-20210721170455419" class="lazyload" data-proofer-ignore></a></p><p>multi_match查询示例：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721170720691.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721170720691.png" alt="image-20210721170720691" class="lazyload" data-proofer-ignore></a></p><p>可以看到，两种查询结果是一样的，为什么？</p><p>因为我们将brand、name、business值都利用copy_to复制到了all字段中。因此你根据三个字段搜索，和根据all字段搜索效果当然一样了。</p><p>但是，搜索字段越多，对查询性能影响越大，因此建议采用copy_to，然后单字段查询的方式。</p><h3 id="124总结"><span class="mr-2">1.2.4.总结</span><a href="#124总结" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>match和multi_match的区别是什么？</p><ul><li>match：根据一个字段查询<li>multi_match：根据多个字段查询，参与查询字段越多，查询性能越差</ul><h2 id="13精准查询"><span class="mr-2">1.3.精准查询</span><a href="#13精准查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>精确查询一般是查找keyword、数值、日期、boolean等类型字段。所以<strong>不会</strong>对搜索条件分词。常见的有：</p><ul><li>term：根据词条精确值查询<li>range：根据值的范围查询</ul><h3 id="131term查询"><span class="mr-2">1.3.1.term查询</span><a href="#131term查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>因为精确查询的字段搜是不分词的字段，因此查询的条件也必须是<strong>不分词</strong>的词条。查询时，用户输入的内容跟自动值完全匹配时才认为符合条件。如果用户输入的内容过多，反而搜索不到数据。</p><p>语法说明：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="err">// term查询</span><span class="w">
+</span><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"term"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"FIELD"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">        </span><span class="nl">"value"</span><span class="p">:</span><span class="err"> </span><span class="s2">"VALUE"</span><span class="w">
+</span><span class="err">      </span><span class="p">}</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>示例：</p><p>当我搜索的是精确词条时，能正确查询出结果：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721171655308.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721171655308.png" alt="image-20210721171655308" class="lazyload" data-proofer-ignore></a></p><p>但是，当我搜索的内容不是词条，而是多个词语形成的短语时，反而搜索不到：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721171838378.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721171838378.png" alt="image-20210721171838378" class="lazyload" data-proofer-ignore></a></p><h3 id="132range查询"><span class="mr-2">1.3.2.range查询</span><a href="#132range查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>范围查询，一般应用在对数值类型做范围过滤的时候。比如做价格范围过滤。</p><p>基本语法：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="err">// range查询</span><span class="w">
+</span><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"range"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"FIELD"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">        </span><span class="nl">"gte"</span><span class="p">:</span><span class="err"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">这里的gte代表大于等于，gt则代表大于</span><span class="w">
+</span><span class="err">        </span><span class="nl">"lte"</span><span class="p">:</span><span class="err"> </span><span class="mi">20</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">lte代表小于等于，lt则代表小于</span><span class="w">
+</span><span class="err">      </span><span class="p">}</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>示例：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721172307172.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721172307172.png" alt="image-20210721172307172" class="lazyload" data-proofer-ignore></a></p><h3 id="133总结"><span class="mr-2">1.3.3.总结</span><a href="#133总结" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>精确查询常见的有哪些？</p><ul><li>term查询：根据词条精确匹配，一般搜索keyword类型、数值类型、布尔类型、日期类型字段<li>range查询：根据数值范围查询，可以是数值、日期的范围</ul><h2 id="14地理坐标查询"><span class="mr-2">1.4.地理坐标查询</span><a href="#14地理坐标查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>所谓的地理坐标查询，其实就是根据经纬度查询，官方文档：https://www.elastic.co/guide/en/elasticsearch/reference/current/geo-queries.html</p><p>常见的使用场景包括：</p><ul><li>携程：搜索我附近的酒店<li>滴滴：搜索我附近的出租车<li>微信：搜索我附近的人</ul><p>附近的酒店：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721172645103.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721172645103.png" alt="image-20210721172645103" class="lazyload" data-proofer-ignore></a></p><p>附近的车：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721172654880.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721172654880.png" alt="image-20210721172654880" class="lazyload" data-proofer-ignore></a></p><h3 id="141矩形范围查询"><span class="mr-2">1.4.1.矩形范围查询</span><a href="#141矩形范围查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>矩形范围查询，也就是geo_bounding_box查询，查询坐标落在某个矩形范围的所有文档：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/DKV9HZbVS6.gif" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/DKV9HZbVS6.gif" alt="DKV9HZbVS6" class="lazyload" data-proofer-ignore></a></p><p>查询时，需要指定矩形的<strong>左上</strong>、<strong>右下</strong>两个点的坐标，然后画出一个矩形，落在该矩形内的都是符合条件的点。</p><p>语法如下：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre><td class="rouge-code"><pre><span class="err">// geo_bounding_box查询</span><span class="w">
+</span><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"geo_bounding_box"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"FIELD"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">        </span><span class="nl">"top_left"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">左上点</span><span class="w">
+</span><span class="err">          </span><span class="nl">"lat"</span><span class="p">:</span><span class="err"> </span><span class="mf">31.1</span><span class="p">,</span><span class="w">
+</span><span class="err">          </span><span class="nl">"lon"</span><span class="p">:</span><span class="err"> </span><span class="mf">121.5</span><span class="w">
+</span><span class="err">        </span><span class="p">},</span><span class="w">
+</span><span class="err">        </span><span class="nl">"bottom_right"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">右下点</span><span class="w">
+</span><span class="err">          </span><span class="nl">"lat"</span><span class="p">:</span><span class="err"> </span><span class="mf">30.9</span><span class="p">,</span><span class="w">
+</span><span class="err">          </span><span class="nl">"lon"</span><span class="p">:</span><span class="err"> </span><span class="mf">121.7</span><span class="w">
+</span><span class="err">        </span><span class="p">}</span><span class="w">
+</span><span class="err">      </span><span class="p">}</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>这种并不符合“附近的人”这样的需求，所以我们就不做了。</p><h3 id="142附近查询"><span class="mr-2">1.4.2.附近查询</span><a href="#142附近查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>附近查询，也叫做距离查询（geo_distance）：查询到指定中心点小于某个距离值的所有文档。</p><p>换句话来说，在地图上找一个点作为圆心，以指定距离为半径，画一个圆，落在圆内的坐标都算符合条件：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/vZrdKAh19C.gif" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/vZrdKAh19C.gif" alt="vZrdKAh19C" class="lazyload" data-proofer-ignore></a></p><p>语法说明：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre><td class="rouge-code"><pre><span class="err">// geo_distance</span><span class="w"> </span><span class="err">查询</span><span class="w">
+</span><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"geo_distance"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"distance"</span><span class="p">:</span><span class="err"> </span><span class="s2">"15km"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">半径</span><span class="w">
+</span><span class="err">      </span><span class="nl">"FIELD"</span><span class="p">:</span><span class="err"> </span><span class="s2">"31.21,121.5"</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">圆心</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>示例：</p><p>我们先搜索陆家嘴附近15km的酒店：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721175443234.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721175443234.png" alt="image-20210721175443234" class="lazyload" data-proofer-ignore></a></p><p>发现共有47家酒店。</p><p>然后把半径缩短到3公里：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721182031475.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721182031475.png" alt="image-20210721182031475" class="lazyload" data-proofer-ignore></a></p><p>可以发现，搜索到的酒店数量减少到了5家。</p><h2 id="15复合查询"><span class="mr-2">1.5.复合查询</span><a href="#15复合查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>复合（compound）查询：复合查询可以将其它简单查询组合起来，实现更复杂的搜索逻辑。常见的有两种：</p><ul><li>fuction score：算分函数查询，可以控制文档相关性算分，控制文档排名<li>bool query：布尔查询，利用逻辑关系组合多个其它的查询，实现复杂搜索</ul><h3 id="151相关性算分"><span class="mr-2">1.5.1.相关性算分</span><a href="#151相关性算分" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>当我们利用match查询时，文档结果会根据与搜索词条的关联度打分（_score），返回结果时按照分值降序排列。</p><p>例如，我们搜索 “虹桥如家”，结果如下：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="p">[</span><span class="w">
+</span><span class="err">  </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="s2">"_score"</span><span class="err"> : </span><span class="mf">17.850193</span><span class="p">,</span><span class="w">
+</span><span class="err">    </span><span class="s2">"_source"</span><span class="err"> : </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="s2">"name"</span><span class="err"> : </span><span class="s2">"虹桥如家酒店真不错"</span><span class="p">,</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">},</span><span class="w">
+</span><span class="err">  </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="s2">"_score"</span><span class="err"> : </span><span class="mf">12.259849</span><span class="p">,</span><span class="w">
+</span><span class="err">    </span><span class="s2">"_source"</span><span class="err"> : </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="s2">"name"</span><span class="err"> : </span><span class="s2">"外滩如家酒店真不错"</span><span class="p">,</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">},</span><span class="w">
+</span><span class="err">  </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="s2">"_score"</span><span class="err"> : </span><span class="mf">11.91091</span><span class="p">,</span><span class="w">
+</span><span class="err">    </span><span class="s2">"_source"</span><span class="err"> : </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="s2">"name"</span><span class="err"> : </span><span class="s2">"迪士尼如家酒店真不错"</span><span class="p">,</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></pre></table></code></div></div><p>在elasticsearch中，早期使用的打分算法是TF-IDF算法，公式如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721190152134.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721190152134.png" alt="image-20210721190152134" class="lazyload" data-proofer-ignore></a></p><p>在后来的5.1版本升级中，elasticsearch将算法改进为BM25算法，公式如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721190416214.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721190416214.png" alt="image-20210721190416214" class="lazyload" data-proofer-ignore></a></p><p>TF-IDF算法有一各缺陷，就是词条频率越高，文档得分也会越高，单个词条对文档影响较大。而BM25则会让单个词条的算分有一个上限，曲线更加平滑：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721190907320.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721190907320.png" alt="image-20210721190907320" class="lazyload" data-proofer-ignore></a></p><p>小结：elasticsearch会根据词条和文档的相关度做打分，算法由两种：</p><ul><li>TF-IDF算法<li>BM25算法，elasticsearch5.1版本后采用的算法</ul><h3 id="152算分函数查询"><span class="mr-2">1.5.2.算分函数查询</span><a href="#152算分函数查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>根据相关度打分是比较合理的需求，但<strong>合理的不一定是产品经理需要</strong>的。</p><p>以百度为例，你搜索的结果中，并不是相关度越高排名越靠前，而是谁掏的钱多排名就越靠前。如图：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721191144560.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721191144560.png" alt="image-20210721191144560" class="lazyload" data-proofer-ignore></a></p><p>要想认为控制相关性算分，就需要利用elasticsearch中的function score 查询了。</p><h4 id="1语法说明"><span class="mr-2">1）语法说明</span><a href="#1语法说明" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721191544750.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721191544750.png" alt="image-20210721191544750" class="lazyload" data-proofer-ignore></a></p><p>function score 查询中包含四部分内容：</p><ul><li><strong>原始查询</strong>条件：query部分，基于这个条件搜索文档，并且基于BM25算法给文档打分，<strong>原始算分</strong>（query score)<li><strong>过滤条件</strong>：filter部分，符合该条件的文档才会重新算分<li><strong>算分函数</strong>：符合filter条件的文档要根据这个函数做运算，得到的<strong>函数算分</strong>（function score），有四种函数<ul><li>weight：函数结果是常量<li>field_value_factor：以文档中的某个字段值作为函数结果<li>random_score：以随机数作为函数结果<li>script_score：自定义算分函数算法</ul><li><strong>运算模式</strong>：算分函数的结果、原始查询的相关性算分，两者之间的运算方式，包括：<ul><li>multiply：相乘<li>replace：用function score替换query score<li>其它，例如：sum、avg、max、min</ul></ul><p>function score的运行流程如下：</p><ul><li>1）根据<strong>原始条件</strong>查询搜索文档，并且计算相关性算分，称为<strong>原始算分</strong>（query score）<li>2）根据<strong>过滤条件</strong>，过滤文档<li>3）符合<strong>过滤条件</strong>的文档，基于<strong>算分函数</strong>运算，得到<strong>函数算分</strong>（function score）<li>4）将<strong>原始算分</strong>（query score）和<strong>函数算分</strong>（function score）基于<strong>运算模式</strong>做运算，得到最终结果，作为相关性算分。</ul><p>因此，其中的关键点是：</p><ul><li>过滤条件：决定哪些文档的算分被修改<li>算分函数：决定函数算分的算法<li>运算模式：决定最终算分结果</ul><h4 id="2示例"><span class="mr-2">2）示例</span><a href="#2示例" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>需求：给“如家”这个品牌的酒店排名靠前一些</p><p>翻译一下这个需求，转换为之前说的四个要点：</p><ul><li>原始条件：不确定，可以任意变化<li>过滤条件：brand = “如家”<li>算分函数：可以简单粗暴，直接给固定的算分结果，weight<li>运算模式：比如求和</ul><p>因此最终的DSL语句如下：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="err">GET /hotel/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"function_score"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">  </span><span class="err">....</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">原始查询，可以是任意条件</span><span class="w">
+</span><span class="err">      </span><span class="nl">"functions"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="err"> // 算分函数</span><span class="w">
+</span><span class="err">        </span><span class="p">{</span><span class="w">
+</span><span class="err">          </span><span class="nl">"filter"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="err"> // 满足的条件，品牌必须是如家</span><span class="w">
+</span><span class="err">            </span><span class="nl">"term"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">              </span><span class="nl">"brand"</span><span class="p">:</span><span class="err"> </span><span class="s2">"如家"</span><span class="w">
+</span><span class="err">            </span><span class="p">}</span><span class="w">
+</span><span class="err">          </span><span class="p">},</span><span class="w">
+</span><span class="err">          </span><span class="nl">"weight"</span><span class="p">:</span><span class="err"> </span><span class="mi">2</span><span class="err"> // 算分权重为</span><span class="mi">2</span><span class="w">
+</span><span class="err">        </span><span class="p">}</span><span class="w">
+</span><span class="err">      </span><span class="p">],</span><span class="w">
+      </span><span class="nl">"boost_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sum"</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">加权模式，求和</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>测试，在未添加算分函数时，如家得分如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721193152520.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721193152520.png" alt="image-20210721193152520" class="lazyload" data-proofer-ignore></a></p><p>添加了算分函数后，如家得分就提升了：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721193458182.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721193458182.png" alt="image-20210721193458182" class="lazyload" data-proofer-ignore></a></p><h4 id="3小结"><span class="mr-2">3）小结</span><a href="#3小结" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>function score query定义的三要素是什么？</p><ul><li>过滤条件：哪些文档要加分<li>算分函数：如何计算function score<li>加权方式：function score 与 query score如何运算</ul><h3 id="153布尔查询"><span class="mr-2">1.5.3.布尔查询</span><a href="#153布尔查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>布尔查询是一个或多个查询子句的组合，每一个子句就是一个<strong>子查询</strong>。子查询的组合方式有：</p><ul><li>must：必须匹配每个子查询，类似“与”<li>should：选择性匹配子查询，类似“或”<li>must_not：必须不匹配，<strong>不参与算分</strong>，类似“非”<li>filter：必须匹配，<strong>不参与算分</strong></ul><p>比如在搜索酒店时，除了关键字搜索外，我们还可能根据品牌、价格、城市等字段做过滤：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721193822848.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721193822848.png" alt="image-20210721193822848" class="lazyload" data-proofer-ignore></a></p><p>每一个不同的字段，其查询的条件、方式都不一样，必须是多个不同的查询，而要组合这些查询，就必须用bool查询了。</p><p>需要注意的是，搜索时，参与<strong>打分的字段越多，查询的性能也越差</strong>。因此这种多条件查询时，建议这样做：</p><ul><li>搜索框的关键字搜索，是全文检索查询，使用must查询，参与算分<li>其它过滤条件，采用filter查询。不参与算分</ul><h4 id="1语法示例"><span class="mr-2">1）语法示例：</span><a href="#1语法示例" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="err">GET /hotel/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"bool"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"must"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="w">
+</span><span class="err">        </span><span class="p">{</span><span class="nl">"term"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="nl">"city"</span><span class="p">:</span><span class="err"> </span><span class="s2">"上海"</span><span class="err"> </span><span class="p">}}</span><span class="w">
+</span><span class="err">      </span><span class="p">],</span><span class="w">
+</span><span class="err">      </span><span class="nl">"should"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="w">
+</span><span class="err">        </span><span class="p">{</span><span class="nl">"term"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="nl">"brand"</span><span class="p">:</span><span class="err"> </span><span class="s2">"皇冠假日"</span><span class="err"> </span><span class="p">}},</span><span class="w">
+        </span><span class="p">{</span><span class="nl">"term"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="nl">"brand"</span><span class="p">:</span><span class="err"> </span><span class="s2">"华美达"</span><span class="err"> </span><span class="p">}}</span><span class="w">
+</span><span class="err">      </span><span class="p">],</span><span class="w">
+</span><span class="err">      </span><span class="nl">"must_not"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="w">
+</span><span class="err">        </span><span class="p">{</span><span class="err"> </span><span class="nl">"range"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="err"> </span><span class="nl">"price"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="err"> </span><span class="nl">"lte"</span><span class="p">:</span><span class="err"> </span><span class="mi">500</span><span class="err"> </span><span class="p">}</span><span class="err"> </span><span class="p">}}</span><span class="w">
+</span><span class="err">      </span><span class="p">],</span><span class="w">
+</span><span class="err">      </span><span class="nl">"filter"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="w">
+</span><span class="err">        </span><span class="p">{</span><span class="err"> </span><span class="nl">"range"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="nl">"score"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="err"> </span><span class="nl">"gte"</span><span class="p">:</span><span class="err"> </span><span class="mi">45</span><span class="err"> </span><span class="p">}</span><span class="err"> </span><span class="p">}}</span><span class="w">
+</span><span class="err">      </span><span class="p">]</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><h4 id="2示例-1"><span class="mr-2">2）示例</span><a href="#2示例-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>需求：搜索名字包含“如家”，价格不高于400，在坐标31.21,121.5周围10km范围内的酒店。</p><p>分析：</p><ul><li>名称搜索，属于全文检索查询，应该参与算分。放到must中<li>价格不高于400，用range查询，属于过滤条件，不参与算分。放到must_not中<li>周围10km范围内，用geo_distance查询，属于过滤条件，不参与算分。放到filter中</ul><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721194744183.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721194744183.png" alt="image-20210721194744183" class="lazyload" data-proofer-ignore></a></p><h4 id="3小结-1"><span class="mr-2">3）小结</span><a href="#3小结-1" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h4><p>bool查询有几种逻辑关系？</p><ul><li>must：必须匹配的条件，可以理解为“与”<li>should：选择性匹配的条件，可以理解为“或”<li>must_not：必须不匹配的条件，不参与打分<li>filter：必须匹配的条件，不参与打分</ul><h1 id="2搜索结果处理">2.搜索结果处理</h1><p>搜索的结果可以按照用户指定的方式去处理或展示。</p><h2 id="21排序"><span class="mr-2">2.1.排序</span><a href="#21排序" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>elasticsearch默认是根据相关度算分（_score）来排序，但是也支持自定义方式对搜索<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/sort-search-results.html">结果排序</a>。可以排序字段类型有：keyword类型、数值类型、地理坐标类型、日期类型等。</p><h3 id="211普通字段排序"><span class="mr-2">2.1.1.普通字段排序</span><a href="#211普通字段排序" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>keyword、数值、日期类型排序的语法基本一致。</p><p><strong>语法</strong>：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"match_all"</span><span class="p">:</span><span class="err"> </span><span class="p">{}</span><span class="w">
+</span><span class="err">  </span><span class="p">},</span><span class="w">
+</span><span class="err">  </span><span class="nl">"sort"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="w">
+</span><span class="err">    </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"FIELD"</span><span class="p">:</span><span class="err"> </span><span class="s2">"desc"</span><span class="err">  // 排序字段、排序方式ASC、DESC</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>排序条件是一个数组，也就是可以写多个排序条件。按照声明的顺序，当第一个条件相等时，再按照第二个条件排序，以此类推</p><p><strong>示例</strong>：</p><p>需求描述：酒店数据按照用户评价（score)降序排序，评价相同的按照价格(price)升序排序</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721195728306.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721195728306.png" alt="image-20210721195728306" class="lazyload" data-proofer-ignore></a></p><h3 id="212地理坐标排序"><span class="mr-2">2.1.2.地理坐标排序</span><a href="#212地理坐标排序" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>地理坐标排序略有不同。</p><p><strong>语法说明</strong>：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre><td class="rouge-code"><pre><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"match_all"</span><span class="p">:</span><span class="err"> </span><span class="p">{}</span><span class="w">
+</span><span class="err">  </span><span class="p">},</span><span class="w">
+</span><span class="err">  </span><span class="nl">"sort"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="w">
+</span><span class="err">    </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="s2">"_geo_distance"</span><span class="err"> : </span><span class="p">{</span><span class="w">
+</span><span class="err">          </span><span class="s2">"FIELD"</span><span class="err"> : </span><span class="s2">"纬度，经度"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">文档中geo_point类型的字段名、目标坐标点</span><span class="w">
+</span><span class="err">          </span><span class="s2">"order"</span><span class="err"> : </span><span class="s2">"asc"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">排序方式</span><span class="w">
+</span><span class="err">          </span><span class="s2">"unit"</span><span class="err"> : </span><span class="s2">"km"</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">排序的距离单位</span><span class="w">
+</span><span class="err">      </span><span class="p">}</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>这个查询的含义是：</p><ul><li>指定一个坐标，作为目标点<li>计算每一个文档中，指定字段（必须是geo_point类型）的坐标 到目标点的距离是多少<li>根据距离排序</ul><p><strong>示例：</strong></p><p>需求描述：实现对酒店数据按照到你的位置坐标的距离升序排序</p><p>提示：获取你的位置的经纬度的方式：https://lbs.amap.com/demo/jsapi-v2/example/map/click-to-get-lnglat/</p><p>假设我的位置是：31.034661，121.612282，寻找我周围距离最近的酒店。</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721200214690.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721200214690.png" alt="image-20210721200214690" class="lazyload" data-proofer-ignore></a></p><h2 id="22分页"><span class="mr-2">2.2.分页</span><a href="#22分页" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>elasticsearch 默认情况下只返回top10的数据。而如果要查询更多数据就需要修改分页参数了。elasticsearch中通过修改from、size参数来控制要返回的分页结果：</p><ul><li>from：从第几个文档开始<li>size：总共查询几个文档</ul><p>类似于mysql中的<code class="language-plaintext highlighter-rouge">limit ?, ?</code></p><h3 id="221基本的分页"><span class="mr-2">2.2.1.基本的分页</span><a href="#221基本的分页" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>分页的基本语法如下：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="err">GET /hotel/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"match_all"</span><span class="p">:</span><span class="err"> </span><span class="p">{}</span><span class="w">
+</span><span class="err">  </span><span class="p">},</span><span class="w">
+</span><span class="err">  </span><span class="nl">"from"</span><span class="p">:</span><span class="err"> </span><span class="mi">0</span><span class="p">,</span><span class="err"> // 分页开始的位置，默认为</span><span class="mi">0</span><span class="w">
+</span><span class="err">  </span><span class="nl">"size"</span><span class="p">:</span><span class="err"> </span><span class="mi">10</span><span class="p">,</span><span class="err"> // 期望获取的文档总数</span><span class="w">
+</span><span class="err">  </span><span class="nl">"sort"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="w">
+</span><span class="err">    </span><span class="p">{</span><span class="nl">"price"</span><span class="p">:</span><span class="err"> </span><span class="s2">"asc"</span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><h3 id="222深度分页问题"><span class="mr-2">2.2.2.深度分页问题</span><a href="#222深度分页问题" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>现在，我要查询990~1000的数据，查询逻辑要这么写：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="err">GET /hotel/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"match_all"</span><span class="p">:</span><span class="err"> </span><span class="p">{}</span><span class="w">
+</span><span class="err">  </span><span class="p">},</span><span class="w">
+</span><span class="err">  </span><span class="nl">"from"</span><span class="p">:</span><span class="err"> </span><span class="mi">990</span><span class="p">,</span><span class="err"> // 分页开始的位置，默认为</span><span class="mi">0</span><span class="w">
+</span><span class="err">  </span><span class="nl">"size"</span><span class="p">:</span><span class="err"> </span><span class="mi">10</span><span class="p">,</span><span class="err"> // 期望获取的文档总数</span><span class="w">
+</span><span class="err">  </span><span class="nl">"sort"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="w">
+</span><span class="err">    </span><span class="p">{</span><span class="nl">"price"</span><span class="p">:</span><span class="err"> </span><span class="s2">"asc"</span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>这里是查询990开始的数据，也就是 第990~第1000条 数据。</p><p>不过，elasticsearch内部分页时，必须先查询 0~1000条，然后截取其中的990 ~ 1000的这10条：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721200643029.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721200643029.png" alt="image-20210721200643029" class="lazyload" data-proofer-ignore></a></p><p>查询TOP1000，如果es是单点模式，这并无太大影响。</p><p>但是elasticsearch将来一定是集群，例如我集群有5个节点，我要查询TOP1000的数据，并不是每个节点查询200条就可以了。</p><p>因为节点A的TOP200，在另一个节点可能排到10000名以外了。</p><p>因此要想获取整个集群的TOP1000，必须先查询出每个节点的TOP1000，汇总结果后，重新排名，重新截取TOP1000。</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721201003229.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721201003229.png" alt="image-20210721201003229" class="lazyload" data-proofer-ignore></a></p><p>那如果我要查询9900~10000的数据呢？是不是要先查询TOP10000呢？那每个节点都要查询10000条？汇总到内存中？</p><p>当查询分页深度较大时，汇总数据过多，对内存和CPU会产生非常大的压力，因此elasticsearch会禁止from+ size 超过10000的请求。</p><p>针对深度分页，ES提供了两种解决方案，<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html">官方文档</a>：</p><ul><li>search after：分页时需要排序，原理是从上一次的排序值开始，查询下一页数据。官方推荐使用的方式。<li>scroll：原理将排序后的文档id形成快照，保存在内存。官方已经不推荐使用。</ul><h3 id="223小结"><span class="mr-2">2.2.3.小结</span><a href="#223小结" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>分页查询的常见实现方案以及优缺点：</p><ul><li><code class="language-plaintext highlighter-rouge">from + size</code>：<ul><li>优点：支持随机翻页<li>缺点：深度分页问题，默认查询上限（from + size）是10000<li>场景：百度、京东、谷歌、淘宝这样的随机翻页搜索</ul><li><code class="language-plaintext highlighter-rouge">after search</code>：<ul><li>优点：没有查询上限（单次查询的size不超过10000）<li>缺点：只能向后逐页查询，不支持随机翻页<li>场景：没有随机翻页需求的搜索，例如手机向下滚动翻页</ul><li><code class="language-plaintext highlighter-rouge">scroll</code>：<ul><li>优点：没有查询上限（单次查询的size不超过10000）<li>缺点：会有额外内存消耗，并且搜索结果是非实时的<li>场景：海量数据的获取和迁移。从ES7.1开始不推荐，建议用 after search方案。</ul></ul><h2 id="23高亮"><span class="mr-2">2.3.高亮</span><a href="#23高亮" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><h3 id="231高亮原理"><span class="mr-2">2.3.1.高亮原理</span><a href="#231高亮原理" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>什么是高亮显示呢？</p><p>我们在百度，京东搜索时，关键字会变成红色，比较醒目，这叫高亮显示：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721202705030.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721202705030.png" alt="image-20210721202705030" class="lazyload" data-proofer-ignore></a></p><p>高亮显示的实现分为两步：</p><ul><li>1）给文档中的所有关键字都添加一个标签，例如<code class="language-plaintext highlighter-rouge">&lt;em&gt;</code>标签<li>2）页面给<code class="language-plaintext highlighter-rouge">&lt;em&gt;</code>标签编写CSS样式</ul><h3 id="232实现高亮"><span class="mr-2">2.3.2.实现高亮</span><a href="#232实现高亮" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p><strong>高亮的语法</strong>：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre><td class="rouge-code"><pre><span class="err">GET /hotel/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"match"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"FIELD"</span><span class="p">:</span><span class="err"> </span><span class="s2">"TEXT"</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">查询条件，高亮一定要使用全文检索查询</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">},</span><span class="w">
+</span><span class="err">  </span><span class="nl">"highlight"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"fields"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="err"> // 指定要高亮的字段</span><span class="w">
+</span><span class="err">      </span><span class="nl">"FIELD"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">        </span><span class="nl">"pre_tags"</span><span class="p">:</span><span class="err"> </span><span class="s2">"&lt;em&gt;"</span><span class="p">,</span><span class="err">  // 用来标记高亮字段的前置标签</span><span class="w">
+</span><span class="err">        </span><span class="nl">"post_tags"</span><span class="p">:</span><span class="err"> </span><span class="s2">"&lt;/em&gt;"</span><span class="err"> // 用来标记高亮字段的后置标签</span><span class="w">
+</span><span class="err">      </span><span class="p">}</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p><strong>注意：</strong></p><ul><li>高亮是对关键字高亮，因此<strong>搜索条件必须带有关键字</strong>，而不能是范围这样的查询。<li>默认情况下，<strong>高亮的字段，必须与搜索指定的字段一致</strong>，否则无法高亮<li>如果要对非搜索字段高亮，则需要添加一个属性：required_field_match=false</ul><p><strong>示例</strong>：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721203349633.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721203349633.png" alt="image-20210721203349633" class="lazyload" data-proofer-ignore></a></p><h2 id="24总结"><span class="mr-2">2.4.总结</span><a href="#24总结" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>查询的DSL是一个大的JSON对象，包含下列属性：</p><ul><li>query：查询条件<li>from和size：分页条件<li>sort：排序条件<li>highlight：高亮条件</ul><p>示例：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721203657850.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721203657850.png" alt="image-20210721203657850" class="lazyload" data-proofer-ignore></a></p><h1 id="3restclient查询文档">3.RestClient查询文档</h1><p>文档的查询同样适用昨天学习的 RestHighLevelClient对象，基本步骤包括：</p><ul><li>1）准备Request对象<li>2）准备请求参数<li>3）发起请求<li>4）解析响应</ul><h2 id="31快速入门"><span class="mr-2">3.1.快速入门</span><a href="#31快速入门" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>我们以match_all查询为例</p><h3 id="311发起查询请求"><span class="mr-2">3.1.1.发起查询请求</span><a href="#311发起查询请求" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721203950559.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721203950559.png" alt="image-20210721203950559" class="lazyload" data-proofer-ignore></a></p><p>代码解读：</p><ul><li><p>第一步，创建<code class="language-plaintext highlighter-rouge">SearchRequest</code>对象，指定索引库名</p><li>第二步，利用<code class="language-plaintext highlighter-rouge">request.source()</code>构建DSL，DSL中可以包含查询、分页、排序、高亮等<ul><li><code class="language-plaintext highlighter-rouge">query()</code>：代表查询条件，利用<code class="language-plaintext highlighter-rouge">QueryBuilders.matchAllQuery()</code>构建一个match_all查询的DSL</ul><li>第三步，利用client.search()发送请求，得到响应</ul><p>这里关键的API有两个，一个是<code class="language-plaintext highlighter-rouge">request.source()</code>，其中包含了查询、排序、分页、高亮等所有功能：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721215640790.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721215640790.png" alt="image-20210721215640790" class="lazyload" data-proofer-ignore></a></p><p>另一个是<code class="language-plaintext highlighter-rouge">QueryBuilders</code>，其中包含match、term、function_score、bool等各种查询：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721215729236.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721215729236.png" alt="image-20210721215729236" class="lazyload" data-proofer-ignore></a></p><h3 id="312解析响应"><span class="mr-2">3.1.2.解析响应</span><a href="#312解析响应" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>响应结果的解析：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721214221057.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721214221057.png" alt="image-20210721214221057" class="lazyload" data-proofer-ignore></a></p><p>elasticsearch返回的结果是一个JSON字符串，结构包含：</p><ul><li><code class="language-plaintext highlighter-rouge">hits</code>：命中的结果<ul><li><code class="language-plaintext highlighter-rouge">total</code>：总条数，其中的value是具体的总条数值<li><code class="language-plaintext highlighter-rouge">max_score</code>：所有结果中得分最高的文档的相关性算分<li><code class="language-plaintext highlighter-rouge">hits</code>：搜索结果的文档数组，其中的每个文档都是一个json对象<ul><li><code class="language-plaintext highlighter-rouge">_source</code>：文档中的原始数据，也是json对象</ul></ul></ul><p>因此，我们解析响应结果，就是逐层解析JSON字符串，流程如下：</p><ul><li><code class="language-plaintext highlighter-rouge">SearchHits</code>：通过response.getHits()获取，就是JSON中的最外层的hits，代表命中的结果<ul><li><code class="language-plaintext highlighter-rouge">SearchHits#getTotalHits().value</code>：获取总条数信息<li><code class="language-plaintext highlighter-rouge">SearchHits#getHits()</code>：获取SearchHit数组，也就是文档数组<ul><li><code class="language-plaintext highlighter-rouge">SearchHit#getSourceAsString()</code>：获取文档结果中的_source，也就是原始的json文档数据</ul></ul></ul><h3 id="313完整代码"><span class="mr-2">3.1.3.完整代码</span><a href="#313完整代码" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>完整代码如下：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+</pre><td class="rouge-code"><pre><span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">testMatchAll</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+    <span class="c1">// 1.准备Request</span>
+    <span class="nc">SearchRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SearchRequest</span><span class="o">(</span><span class="s">"hotel"</span><span class="o">);</span>
+    <span class="c1">// 2.准备DSL</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">query</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchAllQuery</span><span class="o">());</span>
+    <span class="c1">// 3.发送请求</span>
+    <span class="nc">SearchResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">search</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="nc">RequestOptions</span><span class="o">.</span><span class="na">DEFAULT</span><span class="o">);</span>
+
+    <span class="c1">// 4.解析响应</span>
+    <span class="n">handleResponse</span><span class="o">(</span><span class="n">response</span><span class="o">);</span>
+<span class="o">}</span>
+
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleResponse</span><span class="o">(</span><span class="nc">SearchResponse</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 4.解析响应</span>
+    <span class="nc">SearchHits</span> <span class="n">searchHits</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getHits</span><span class="o">();</span>
+    <span class="c1">// 4.1.获取总条数</span>
+    <span class="kt">long</span> <span class="n">total</span> <span class="o">=</span> <span class="n">searchHits</span><span class="o">.</span><span class="na">getTotalHits</span><span class="o">().</span><span class="na">value</span><span class="o">;</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"共搜索到"</span> <span class="o">+</span> <span class="n">total</span> <span class="o">+</span> <span class="s">"条数据"</span><span class="o">);</span>
+    <span class="c1">// 4.2.文档数组</span>
+    <span class="nc">SearchHit</span><span class="o">[]</span> <span class="n">hits</span> <span class="o">=</span> <span class="n">searchHits</span><span class="o">.</span><span class="na">getHits</span><span class="o">();</span>
+    <span class="c1">// 4.3.遍历</span>
+    <span class="k">for</span> <span class="o">(</span><span class="nc">SearchHit</span> <span class="n">hit</span> <span class="o">:</span> <span class="n">hits</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 获取文档source</span>
+        <span class="nc">String</span> <span class="n">json</span> <span class="o">=</span> <span class="n">hit</span><span class="o">.</span><span class="na">getSourceAsString</span><span class="o">();</span>
+        <span class="c1">// 反序列化</span>
+        <span class="nc">HotelDoc</span> <span class="n">hotelDoc</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span><span class="n">json</span><span class="o">,</span> <span class="nc">HotelDoc</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"hotelDoc = "</span> <span class="o">+</span> <span class="n">hotelDoc</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h3 id="314小结"><span class="mr-2">3.1.4.小结</span><a href="#314小结" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>查询的基本步骤是：</p><ol><li><p>创建SearchRequest对象</p><li><p>准备Request.source()，也就是DSL。</p><p>① QueryBuilders来构建查询条件</p><p>② 传入Request.source() 的 query() 方法</p><li><p>发送请求，得到结果</p><li><p>解析结果（参考JSON结果，从外到内，逐层解析）</p></ol><h2 id="32match查询"><span class="mr-2">3.2.match查询</span><a href="#32match查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>全文检索的match和multi_match查询与match_all的API基本一致。差别是查询条件，也就是query的部分。</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721215923060.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721215923060.png" alt="image-20210721215923060" class="lazyload" data-proofer-ignore></a></p><p>因此，Java代码上的差异主要是request.source().query()中的参数了。同样是利用QueryBuilders提供的方法：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721215843099.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721215843099.png" alt="image-20210721215843099" class="lazyload" data-proofer-ignore></a></p><p>而结果解析代码则完全一致，可以抽取并共享。</p><p>完整代码如下：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">testMatch</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+    <span class="c1">// 1.准备Request</span>
+    <span class="nc">SearchRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SearchRequest</span><span class="o">(</span><span class="s">"hotel"</span><span class="o">);</span>
+    <span class="c1">// 2.准备DSL</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">()</span>
+        <span class="o">.</span><span class="na">query</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchQuery</span><span class="o">(</span><span class="s">"all"</span><span class="o">,</span> <span class="s">"如家"</span><span class="o">));</span>
+    <span class="c1">// 3.发送请求</span>
+    <span class="nc">SearchResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">search</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="nc">RequestOptions</span><span class="o">.</span><span class="na">DEFAULT</span><span class="o">);</span>
+    <span class="c1">// 4.解析响应</span>
+    <span class="n">handleResponse</span><span class="o">(</span><span class="n">response</span><span class="o">);</span>
+
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="33精确查询"><span class="mr-2">3.3.精确查询</span><a href="#33精确查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>精确查询主要是两者：</p><ul><li>term：词条精确匹配<li>range：范围查询</ul><p>与之前的查询相比，差异同样在查询条件，其它都一样。</p><p>查询条件构造的API如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721220305140.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721220305140.png" alt="image-20210721220305140" class="lazyload" data-proofer-ignore></a></p><h2 id="34布尔查询"><span class="mr-2">3.4.布尔查询</span><a href="#34布尔查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>布尔查询是用must、must_not、filter等方式组合其它查询，代码示例如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721220927286.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721220927286.png" alt="image-20210721220927286" class="lazyload" data-proofer-ignore></a></p><p>可以看到，API与其它查询的差别同样是在查询条件的构建，QueryBuilders，结果解析等其他代码完全不变。</p><p>完整代码如下：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">testBool</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+    <span class="c1">// 1.准备Request</span>
+    <span class="nc">SearchRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SearchRequest</span><span class="o">(</span><span class="s">"hotel"</span><span class="o">);</span>
+    <span class="c1">// 2.准备DSL</span>
+    <span class="c1">// 2.1.准备BooleanQuery</span>
+    <span class="nc">BoolQueryBuilder</span> <span class="n">boolQuery</span> <span class="o">=</span> <span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">boolQuery</span><span class="o">();</span>
+    <span class="c1">// 2.2.添加term</span>
+    <span class="n">boolQuery</span><span class="o">.</span><span class="na">must</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">termQuery</span><span class="o">(</span><span class="s">"city"</span><span class="o">,</span> <span class="s">"杭州"</span><span class="o">));</span>
+    <span class="c1">// 2.3.添加range</span>
+    <span class="n">boolQuery</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">rangeQuery</span><span class="o">(</span><span class="s">"price"</span><span class="o">).</span><span class="na">lte</span><span class="o">(</span><span class="mi">250</span><span class="o">));</span>
+
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">query</span><span class="o">(</span><span class="n">boolQuery</span><span class="o">);</span>
+    <span class="c1">// 3.发送请求</span>
+    <span class="nc">SearchResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">search</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="nc">RequestOptions</span><span class="o">.</span><span class="na">DEFAULT</span><span class="o">);</span>
+    <span class="c1">// 4.解析响应</span>
+    <span class="n">handleResponse</span><span class="o">(</span><span class="n">response</span><span class="o">);</span>
+
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="35排序分页"><span class="mr-2">3.5.排序、分页</span><a href="#35排序分页" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>搜索结果的排序和分页是与query同级的参数，因此同样是使用request.source()来设置。</p><p>对应的API如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721221121266.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721221121266.png" alt="image-20210721221121266" class="lazyload" data-proofer-ignore></a></p><p>完整代码示例：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre><td class="rouge-code"><pre><span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">testPageAndSort</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+    <span class="c1">// 页码，每页大小</span>
+    <span class="kt">int</span> <span class="n">page</span> <span class="o">=</span> <span class="mi">1</span><span class="o">,</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">5</span><span class="o">;</span>
+
+    <span class="c1">// 1.准备Request</span>
+    <span class="nc">SearchRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SearchRequest</span><span class="o">(</span><span class="s">"hotel"</span><span class="o">);</span>
+    <span class="c1">// 2.准备DSL</span>
+    <span class="c1">// 2.1.query</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">query</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchAllQuery</span><span class="o">());</span>
+    <span class="c1">// 2.2.排序 sort</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">sort</span><span class="o">(</span><span class="s">"price"</span><span class="o">,</span> <span class="nc">SortOrder</span><span class="o">.</span><span class="na">ASC</span><span class="o">);</span>
+    <span class="c1">// 2.3.分页 from、size</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">from</span><span class="o">((</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">*</span> <span class="n">size</span><span class="o">).</span><span class="na">size</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+    <span class="c1">// 3.发送请求</span>
+    <span class="nc">SearchResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">search</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="nc">RequestOptions</span><span class="o">.</span><span class="na">DEFAULT</span><span class="o">);</span>
+    <span class="c1">// 4.解析响应</span>
+    <span class="n">handleResponse</span><span class="o">(</span><span class="n">response</span><span class="o">);</span>
+
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="36高亮"><span class="mr-2">3.6.高亮</span><a href="#36高亮" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>高亮的代码与之前代码差异较大，有两点：</p><ul><li>查询的DSL：其中除了查询条件，还需要添加高亮条件，同样是与query同级。<li>结果解析：结果除了要解析_source文档数据，还要解析高亮结果</ul><h3 id="361高亮请求构建"><span class="mr-2">3.6.1.高亮请求构建</span><a href="#361高亮请求构建" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>高亮请求的构建API如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721221744883-1710227236039-109.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721221744883-1710227236039-109.png" alt="image-20210721221744883" class="lazyload" data-proofer-ignore></a></p><p>上述代码省略了查询条件部分，但是大家不要忘了：高亮查询必须使用全文检索查询，并且要有搜索关键字，将来才可以对关键字高亮。</p><p>完整代码如下：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre><td class="rouge-code"><pre><span class="nd">@Test</span>
+<span class="kt">void</span> <span class="nf">testHighlight</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+    <span class="c1">// 1.准备Request</span>
+    <span class="nc">SearchRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SearchRequest</span><span class="o">(</span><span class="s">"hotel"</span><span class="o">);</span>
+    <span class="c1">// 2.准备DSL</span>
+    <span class="c1">// 2.1.query</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">query</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchQuery</span><span class="o">(</span><span class="s">"all"</span><span class="o">,</span> <span class="s">"如家"</span><span class="o">));</span>
+    <span class="c1">// 2.2.高亮</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">highlighter</span><span class="o">(</span><span class="k">new</span> <span class="nc">HighlightBuilder</span><span class="o">().</span><span class="na">field</span><span class="o">(</span><span class="s">"name"</span><span class="o">).</span><span class="na">requireFieldMatch</span><span class="o">(</span><span class="kc">false</span><span class="o">));</span>
+    <span class="c1">// 3.发送请求</span>
+    <span class="nc">SearchResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">search</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="nc">RequestOptions</span><span class="o">.</span><span class="na">DEFAULT</span><span class="o">);</span>
+    <span class="c1">// 4.解析响应</span>
+    <span class="n">handleResponse</span><span class="o">(</span><span class="n">response</span><span class="o">);</span>
+
+<span class="o">}</span>
+</pre></table></code></div></div><h3 id="362高亮结果解析"><span class="mr-2">3.6.2.高亮结果解析</span><a href="#362高亮结果解析" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>高亮的结果与查询的文档结果默认是分离的，并不在一起。</p><p>因此解析高亮的代码需要额外处理：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721222057212.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721222057212.png" alt="image-20210721222057212" class="lazyload" data-proofer-ignore></a></p><p>代码解读：</p><ul><li>第一步：从结果中获取source。hit.getSourceAsString()，这部分是非高亮结果，json字符串。还需要反序列为HotelDoc对象<li>第二步：获取高亮结果。hit.getHighlightFields()，返回值是一个Map，key是高亮字段名称，值是HighlightField对象，代表高亮值<li>第三步：从map中根据高亮字段名称，获取高亮字段值对象HighlightField<li>第四步：从HighlightField中获取Fragments，并且转为字符串。这部分就是真正的高亮字符串了<li>第五步：用高亮的结果替换HotelDoc中的非高亮结果</ul><p>完整代码如下：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+</pre><td class="rouge-code"><pre><span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleResponse</span><span class="o">(</span><span class="nc">SearchResponse</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 4.解析响应</span>
+    <span class="nc">SearchHits</span> <span class="n">searchHits</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getHits</span><span class="o">();</span>
+    <span class="c1">// 4.1.获取总条数</span>
+    <span class="kt">long</span> <span class="n">total</span> <span class="o">=</span> <span class="n">searchHits</span><span class="o">.</span><span class="na">getTotalHits</span><span class="o">().</span><span class="na">value</span><span class="o">;</span>
+    <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"共搜索到"</span> <span class="o">+</span> <span class="n">total</span> <span class="o">+</span> <span class="s">"条数据"</span><span class="o">);</span>
+    <span class="c1">// 4.2.文档数组</span>
+    <span class="nc">SearchHit</span><span class="o">[]</span> <span class="n">hits</span> <span class="o">=</span> <span class="n">searchHits</span><span class="o">.</span><span class="na">getHits</span><span class="o">();</span>
+    <span class="c1">// 4.3.遍历</span>
+    <span class="k">for</span> <span class="o">(</span><span class="nc">SearchHit</span> <span class="n">hit</span> <span class="o">:</span> <span class="n">hits</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 获取文档source</span>
+        <span class="nc">String</span> <span class="n">json</span> <span class="o">=</span> <span class="n">hit</span><span class="o">.</span><span class="na">getSourceAsString</span><span class="o">();</span>
+        <span class="c1">// 反序列化</span>
+        <span class="nc">HotelDoc</span> <span class="n">hotelDoc</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span><span class="n">json</span><span class="o">,</span> <span class="nc">HotelDoc</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="c1">// 获取高亮结果</span>
+        <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">,</span> <span class="nc">HighlightField</span><span class="o">&gt;</span> <span class="n">highlightFields</span> <span class="o">=</span> <span class="n">hit</span><span class="o">.</span><span class="na">getHighlightFields</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(!</span><span class="nc">CollectionUtils</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">(</span><span class="n">highlightFields</span><span class="o">))</span> <span class="o">{</span>
+            <span class="c1">// 根据字段名获取高亮结果</span>
+            <span class="nc">HighlightField</span> <span class="n">highlightField</span> <span class="o">=</span> <span class="n">highlightFields</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">"name"</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">highlightField</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="c1">// 获取高亮值</span>
+                <span class="nc">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">highlightField</span><span class="o">.</span><span class="na">getFragments</span><span class="o">()[</span><span class="mi">0</span><span class="o">].</span><span class="na">string</span><span class="o">();</span>
+                <span class="c1">// 覆盖非高亮结果</span>
+                <span class="n">hotelDoc</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"hotelDoc = "</span> <span class="o">+</span> <span class="n">hotelDoc</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h1 id="4黑马旅游案例">4.黑马旅游案例</h1><p>下面，我们通过黑马旅游的案例来实战演练下之前学习的知识。</p><p>我们实现四部分功能：</p><ul><li>酒店搜索和分页<li>酒店结果过滤<li>我周边的酒店<li>酒店竞价排名</ul><p>启动我们提供的hotel-demo项目，其默认端口是8089，访问http://localhost:8090，就能看到项目页面了：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721223159598.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721223159598.png" alt="image-20210721223159598" class="lazyload" data-proofer-ignore></a></p><h2 id="41酒店搜索和分页"><span class="mr-2">4.1.酒店搜索和分页</span><a href="#41酒店搜索和分页" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>案例需求：实现黑马旅游的酒店搜索功能，完成关键字搜索和分页</p><h3 id="411需求分析"><span class="mr-2">4.1.1.需求分析</span><a href="#411需求分析" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>在项目的首页，有一个大大的搜索框，还有分页按钮：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721223859419.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721223859419.png" alt="image-20210721223859419" class="lazyload" data-proofer-ignore></a></p><p>点击搜索按钮，可以看到浏览器控制台发出了请求：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721224033789.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721224033789.png" alt="image-20210721224033789" class="lazyload" data-proofer-ignore></a></p><p>请求参数如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721224112708.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721224112708.png" alt="image-20210721224112708" class="lazyload" data-proofer-ignore></a></p><p>由此可以知道，我们这个请求的信息如下：</p><ul><li>请求方式：POST<li>请求路径：/hotel/list<li>请求参数：JSON对象，包含4个字段：<ul><li>key：搜索关键字<li>page：页码<li>size：每页大小<li>sortBy：排序，目前暂不实现</ul><li>返回值：分页查询，需要返回分页结果PageResult，包含两个属性：<ul><li><code class="language-plaintext highlighter-rouge">total</code>：总条数<li><code class="language-plaintext highlighter-rouge">List&lt;HotelDoc&gt;</code>：当前页的数据</ul></ul><p>因此，我们实现业务的流程如下：</p><ul><li>步骤一：定义实体类，接收请求参数的JSON对象<li>步骤二：编写controller，接收页面的请求<li>步骤三：编写业务实现，利用RestHighLevelClient实现搜索、分页</ul><h3 id="412定义实体类"><span class="mr-2">4.1.2.定义实体类</span><a href="#412定义实体类" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>实体类有两个，一个是前端的请求参数实体，一个是服务端应该返回的响应结果实体。</p><p>1）请求参数</p><p>前端请求的json结构如下：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="p">{</span><span class="w">
+    </span><span class="nl">"key"</span><span class="p">:</span><span class="w"> </span><span class="s2">"搜索关键字"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"page"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"size"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"sortBy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>因此，我们在<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.pojo</code>包下定义一个实体类：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre><td class="rouge-code"><pre><span class="kn">package</span> <span class="nn">cn.itcast.hotel.pojo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+
+<span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RequestParams</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">key</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">page</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">size</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">sortBy</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></table></code></div></div><p>2）返回值</p><p>分页查询，需要返回分页结果PageResult，包含两个属性：</p><ul><li><code class="language-plaintext highlighter-rouge">total</code>：总条数<li><code class="language-plaintext highlighter-rouge">List&lt;HotelDoc&gt;</code>：当前页的数据</ul><p>因此，我们在<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.pojo</code>中定义返回结果：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="kn">package</span> <span class="nn">cn.itcast.hotel.pojo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">PageResult</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Long</span> <span class="n">total</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">HotelDoc</span><span class="o">&gt;</span> <span class="n">hotels</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">PageResult</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">PageResult</span><span class="o">(</span><span class="nc">Long</span> <span class="n">total</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">HotelDoc</span><span class="o">&gt;</span> <span class="n">hotels</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">total</span> <span class="o">=</span> <span class="n">total</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">hotels</span> <span class="o">=</span> <span class="n">hotels</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h3 id="413定义controller"><span class="mr-2">4.1.3.定义controller</span><a href="#413定义controller" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>定义一个HotelController，声明查询接口，满足下列要求：</p><ul><li>请求方式：Post<li>请求路径：/hotel/list<li>请求参数：对象，类型为RequestParam<li>返回值：PageResult，包含两个属性<ul><li><code class="language-plaintext highlighter-rouge">Long total</code>：总条数<li><code class="language-plaintext highlighter-rouge">List&lt;HotelDoc&gt; hotels</code>：酒店数据</ul></ul><p>因此，我们在<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.web</code>中定义HotelController：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre><td class="rouge-code"><pre><span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"/hotel"</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HotelController</span> <span class="o">{</span>
+
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="nc">IHotelService</span> <span class="n">hotelService</span><span class="o">;</span>
+	<span class="c1">// 搜索酒店数据</span>
+    <span class="nd">@PostMapping</span><span class="o">(</span><span class="s">"/list"</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="nc">PageResult</span> <span class="nf">search</span><span class="o">(</span><span class="nd">@RequestBody</span> <span class="nc">RequestParams</span> <span class="n">params</span><span class="o">){</span>
+        <span class="k">return</span> <span class="n">hotelService</span><span class="o">.</span><span class="na">search</span><span class="o">(</span><span class="n">params</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h3 id="414实现搜索业务"><span class="mr-2">4.1.4.实现搜索业务</span><a href="#414实现搜索业务" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>我们在controller调用了IHotelService，并没有实现该方法，因此下面我们就在IHotelService中定义方法，并且去实现业务逻辑。</p><p>1）在<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.service</code>中的<code class="language-plaintext highlighter-rouge">IHotelService</code>接口中定义一个方法：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="cm">/**
+ * 根据关键字搜索酒店信息
+ * @param params 请求参数对象，包含用户输入的关键字 
+ * @return 酒店文档列表
+ */</span>
+<span class="nc">PageResult</span> <span class="nf">search</span><span class="o">(</span><span class="nc">RequestParams</span> <span class="n">params</span><span class="o">);</span>
+</pre></table></code></div></div><p>2）实现搜索业务，肯定离不开RestHighLevelClient，我们需要把它注册到Spring中作为一个Bean。在<code class="language-plaintext highlighter-rouge">cn.itcast.hotel</code>中的<code class="language-plaintext highlighter-rouge">HotelDemoApplication</code>中声明这个Bean：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="nc">RestHighLevelClient</span> <span class="nf">client</span><span class="o">(){</span>
+    <span class="k">return</span>  <span class="k">new</span> <span class="nf">RestHighLevelClient</span><span class="o">(</span><span class="nc">RestClient</span><span class="o">.</span><span class="na">builder</span><span class="o">(</span>
+        <span class="nc">HttpHost</span><span class="o">.</span><span class="na">create</span><span class="o">(</span><span class="s">"http://192.168.150.101:9200"</span><span class="o">)</span>
+    <span class="o">));</span>
+<span class="o">}</span>
+</pre></table></code></div></div><p>3）在<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.service.impl</code>中的<code class="language-plaintext highlighter-rouge">HotelService</code>中实现search方法：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+</pre><td class="rouge-code"><pre><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">PageResult</span> <span class="nf">search</span><span class="o">(</span><span class="nc">RequestParams</span> <span class="n">params</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="c1">// 1.准备Request</span>
+        <span class="nc">SearchRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SearchRequest</span><span class="o">(</span><span class="s">"hotel"</span><span class="o">);</span>
+        <span class="c1">// 2.准备DSL</span>
+        <span class="c1">// 2.1.query</span>
+        <span class="nc">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">getKey</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">key</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="s">""</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">boolQuery</span><span class="o">.</span><span class="na">must</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchAllQuery</span><span class="o">());</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">boolQuery</span><span class="o">.</span><span class="na">must</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchQuery</span><span class="o">(</span><span class="s">"all"</span><span class="o">,</span> <span class="n">key</span><span class="o">));</span>
+        <span class="o">}</span>
+
+        <span class="c1">// 2.2.分页</span>
+        <span class="kt">int</span> <span class="n">page</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">getPage</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">getSize</span><span class="o">();</span>
+        <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">from</span><span class="o">((</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">*</span> <span class="n">size</span><span class="o">).</span><span class="na">size</span><span class="o">(</span><span class="n">size</span><span class="o">);</span>
+
+        <span class="c1">// 3.发送请求</span>
+        <span class="nc">SearchResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">search</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="nc">RequestOptions</span><span class="o">.</span><span class="na">DEFAULT</span><span class="o">);</span>
+        <span class="c1">// 4.解析响应</span>
+        <span class="k">return</span> <span class="nf">handleResponse</span><span class="o">(</span><span class="n">response</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="c1">// 结果解析</span>
+<span class="kd">private</span> <span class="nc">PageResult</span> <span class="nf">handleResponse</span><span class="o">(</span><span class="nc">SearchResponse</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 4.解析响应</span>
+    <span class="nc">SearchHits</span> <span class="n">searchHits</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="na">getHits</span><span class="o">();</span>
+    <span class="c1">// 4.1.获取总条数</span>
+    <span class="kt">long</span> <span class="n">total</span> <span class="o">=</span> <span class="n">searchHits</span><span class="o">.</span><span class="na">getTotalHits</span><span class="o">().</span><span class="na">value</span><span class="o">;</span>
+    <span class="c1">// 4.2.文档数组</span>
+    <span class="nc">SearchHit</span><span class="o">[]</span> <span class="n">hits</span> <span class="o">=</span> <span class="n">searchHits</span><span class="o">.</span><span class="na">getHits</span><span class="o">();</span>
+    <span class="c1">// 4.3.遍历</span>
+    <span class="nc">List</span><span class="o">&lt;</span><span class="nc">HotelDoc</span><span class="o">&gt;</span> <span class="n">hotels</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="k">for</span> <span class="o">(</span><span class="nc">SearchHit</span> <span class="n">hit</span> <span class="o">:</span> <span class="n">hits</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">// 获取文档source</span>
+        <span class="nc">String</span> <span class="n">json</span> <span class="o">=</span> <span class="n">hit</span><span class="o">.</span><span class="na">getSourceAsString</span><span class="o">();</span>
+        <span class="c1">// 反序列化</span>
+        <span class="nc">HotelDoc</span> <span class="n">hotelDoc</span> <span class="o">=</span> <span class="no">JSON</span><span class="o">.</span><span class="na">parseObject</span><span class="o">(</span><span class="n">json</span><span class="o">,</span> <span class="nc">HotelDoc</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+		<span class="c1">// 放入集合</span>
+        <span class="n">hotels</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">hotelDoc</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="c1">// 4.4.封装返回</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">PageResult</span><span class="o">(</span><span class="n">total</span><span class="o">,</span> <span class="n">hotels</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="42酒店结果过滤"><span class="mr-2">4.2.酒店结果过滤</span><a href="#42酒店结果过滤" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>需求：添加品牌、城市、星级、价格等过滤功能</p><h3 id="421需求分析"><span class="mr-2">4.2.1.需求分析</span><a href="#421需求分析" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>在页面搜索框下面，会有一些过滤项：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722091940726.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722091940726.png" alt="image-20210722091940726" class="lazyload" data-proofer-ignore></a></p><p>传递的参数如图：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722092051994.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722092051994.png" alt="image-20210722092051994" class="lazyload" data-proofer-ignore></a></p><p>包含的过滤条件有：</p><ul><li>brand：品牌值<li>city：城市<li>minPrice~maxPrice：价格范围<li>starName：星级</ul><p>我们需要做两件事情：</p><ul><li>修改请求参数的对象RequestParams，接收上述参数<li>修改业务逻辑，在搜索条件之外，添加一些过滤条件</ul><h3 id="422修改实体类"><span class="mr-2">4.2.2.修改实体类</span><a href="#422修改实体类" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>修改在<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.pojo</code>包下的实体类RequestParams：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre><td class="rouge-code"><pre><span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RequestParams</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">key</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">page</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">size</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">sortBy</span><span class="o">;</span>
+    <span class="c1">// 下面是新增的过滤条件参数</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">city</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">brand</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">starName</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">minPrice</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">maxPrice</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h3 id="423修改搜索业务"><span class="mr-2">4.2.3.修改搜索业务</span><a href="#423修改搜索业务" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>在HotelService的search方法中，只有一个地方需要修改：requet.source().query( … )其中的查询条件。</p><p>在之前的业务中，只有match查询，根据关键字搜索，现在要添加条件过滤，包括：</p><ul><li>品牌过滤：是keyword类型，用term查询<li>星级过滤：是keyword类型，用term查询<li>价格过滤：是数值类型，用range查询<li>城市过滤：是keyword类型，用term查询</ul><p>多个查询条件组合，肯定是boolean查询来组合：</p><ul><li>关键字搜索放到must中，参与算分<li>其它过滤条件放到filter中，不参与算分</ul><p>因为条件构建的逻辑比较复杂，这里先封装为一个函数：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722092935453.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722092935453.png" alt="image-20210722092935453" class="lazyload" data-proofer-ignore></a></p><p>buildBasicQuery的代码如下：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+</pre><td class="rouge-code"><pre><span class="kd">private</span> <span class="kt">void</span> <span class="nf">buildBasicQuery</span><span class="o">(</span><span class="nc">RequestParams</span> <span class="n">params</span><span class="o">,</span> <span class="nc">SearchRequest</span> <span class="n">request</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 1.构建BooleanQuery</span>
+    <span class="nc">BoolQueryBuilder</span> <span class="n">boolQuery</span> <span class="o">=</span> <span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">boolQuery</span><span class="o">();</span>
+    <span class="c1">// 2.关键字搜索</span>
+    <span class="nc">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">getKey</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">key</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="s">""</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">must</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchAllQuery</span><span class="o">());</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">must</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchQuery</span><span class="o">(</span><span class="s">"all"</span><span class="o">,</span> <span class="n">key</span><span class="o">));</span>
+    <span class="o">}</span>
+    <span class="c1">// 3.城市条件</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getCity</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">params</span><span class="o">.</span><span class="na">getCity</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">""</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">termQuery</span><span class="o">(</span><span class="s">"city"</span><span class="o">,</span> <span class="n">params</span><span class="o">.</span><span class="na">getCity</span><span class="o">()));</span>
+    <span class="o">}</span>
+    <span class="c1">// 4.品牌条件</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getBrand</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">params</span><span class="o">.</span><span class="na">getBrand</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">""</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">termQuery</span><span class="o">(</span><span class="s">"brand"</span><span class="o">,</span> <span class="n">params</span><span class="o">.</span><span class="na">getBrand</span><span class="o">()));</span>
+    <span class="o">}</span>
+    <span class="c1">// 5.星级条件</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getStarName</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">params</span><span class="o">.</span><span class="na">getStarName</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">""</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">termQuery</span><span class="o">(</span><span class="s">"starName"</span><span class="o">,</span> <span class="n">params</span><span class="o">.</span><span class="na">getStarName</span><span class="o">()));</span>
+    <span class="o">}</span>
+	<span class="c1">// 6.价格</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getMinPrice</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">params</span><span class="o">.</span><span class="na">getMaxPrice</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">QueryBuilders</span>
+                         <span class="o">.</span><span class="na">rangeQuery</span><span class="o">(</span><span class="s">"price"</span><span class="o">)</span>
+                         <span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getMinPrice</span><span class="o">())</span>
+                         <span class="o">.</span><span class="na">lte</span><span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getMaxPrice</span><span class="o">())</span>
+                        <span class="o">);</span>
+    <span class="o">}</span>
+	<span class="c1">// 7.放入source</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">query</span><span class="o">(</span><span class="n">boolQuery</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h2 id="43我周边的酒店"><span class="mr-2">4.3.我周边的酒店</span><a href="#43我周边的酒店" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>需求：我附近的酒店</p><h3 id="431需求分析"><span class="mr-2">4.3.1.需求分析</span><a href="#431需求分析" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>在酒店列表页的右侧，有一个小地图，点击地图的定位按钮，地图会找到你所在的位置：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722093414542.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722093414542.png" alt="image-20210722093414542" class="lazyload" data-proofer-ignore></a></p><p>并且，在前端会发起查询请求，将你的坐标发送到服务端：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722093642382.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722093642382.png" alt="image-20210722093642382" class="lazyload" data-proofer-ignore></a></p><p>我们要做的事情就是基于这个location坐标，然后按照距离对周围酒店排序。实现思路如下：</p><ul><li>修改RequestParams参数，接收location字段<li>修改search方法业务逻辑，如果location有值，添加根据geo_distance排序的功能</ul><h3 id="432修改实体类"><span class="mr-2">4.3.2.修改实体类</span><a href="#432修改实体类" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>修改在<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.pojo</code>包下的实体类RequestParams：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre><td class="rouge-code"><pre><span class="kn">package</span> <span class="nn">cn.itcast.hotel.pojo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+
+<span class="nd">@Data</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">RequestParams</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">key</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">page</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">size</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">sortBy</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">city</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">brand</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">starName</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">minPrice</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">maxPrice</span><span class="o">;</span>
+    <span class="c1">// 我当前的地理坐标</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">location</span><span class="o">;</span>
+<span class="o">}</span>
+
+</pre></table></code></div></div><h3 id="433距离排序api"><span class="mr-2">4.3.3.距离排序API</span><a href="#433距离排序api" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>我们以前学习过排序功能，包括两种：</p><ul><li>普通字段排序<li>地理坐标排序</ul><p>我们只讲了普通字段排序对应的java写法。地理坐标排序只学过DSL语法，如下：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre><td class="rouge-code"><pre><span class="err">GET /indexName/_search</span><span class="w">
+</span><span class="p">{</span><span class="w">
+</span><span class="err">  </span><span class="nl">"query"</span><span class="p">:</span><span class="err"> </span><span class="p">{</span><span class="w">
+</span><span class="err">    </span><span class="nl">"match_all"</span><span class="p">:</span><span class="err"> </span><span class="p">{}</span><span class="w">
+</span><span class="err">  </span><span class="p">},</span><span class="w">
+ </span><span class="err"> </span><span class="nl">"sort"</span><span class="p">:</span><span class="err"> </span><span class="p">[</span><span class="w">
+</span><span class="err">    </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="nl">"price"</span><span class="p">:</span><span class="err"> </span><span class="s2">"asc"</span><span class="err">  </span><span class="w">
+</span><span class="err">    </span><span class="p">},</span><span class="w">
+</span><span class="err">    </span><span class="p">{</span><span class="w">
+</span><span class="err">      </span><span class="s2">"_geo_distance"</span><span class="err"> : </span><span class="p">{</span><span class="w">
+</span><span class="err">          </span><span class="s2">"FIELD"</span><span class="err"> : </span><span class="s2">"纬度，经度"</span><span class="p">,</span><span class="w">
+</span><span class="err">          </span><span class="s2">"order"</span><span class="err"> : </span><span class="s2">"asc"</span><span class="p">,</span><span class="w">
+</span><span class="err">          </span><span class="s2">"unit"</span><span class="err"> : </span><span class="s2">"km"</span><span class="w">
+</span><span class="err">      </span><span class="p">}</span><span class="w">
+</span><span class="err">    </span><span class="p">}</span><span class="w">
+</span><span class="err">  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><p>对应的java代码示例：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722095227059.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722095227059.png" alt="image-20210722095227059" class="lazyload" data-proofer-ignore></a></p><h3 id="434添加距离排序"><span class="mr-2">4.3.4.添加距离排序</span><a href="#434添加距离排序" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>在<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.service.impl</code>的<code class="language-plaintext highlighter-rouge">HotelService</code>的<code class="language-plaintext highlighter-rouge">search</code>方法中，添加一个排序功能：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722095902314.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722095902314.png" alt="image-20210722095902314" class="lazyload" data-proofer-ignore></a></p><p>完整代码：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+</pre><td class="rouge-code"><pre><span class="nd">@Override</span>
+<span class="kd">public</span> <span class="nc">PageResult</span> <span class="nf">search</span><span class="o">(</span><span class="nc">RequestParams</span> <span class="n">params</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">try</span> <span class="o">{</span>
+        <span class="c1">// 1.准备Request</span>
+        <span class="nc">SearchRequest</span> <span class="n">request</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">SearchRequest</span><span class="o">(</span><span class="s">"hotel"</span><span class="o">);</span>
+        <span class="c1">// 2.准备DSL</span>
+        <span class="c1">// 2.1.query</span>
+        <span class="n">buildBasicQuery</span><span class="o">(</span><span class="n">params</span><span class="o">,</span> <span class="n">request</span><span class="o">);</span>
+
+        <span class="c1">// 2.2.分页</span>
+        <span class="kt">int</span> <span class="n">page</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">getPage</span><span class="o">();</span>
+        <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">getSize</span><span class="o">();</span>
+        <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">from</span><span class="o">((</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">*</span> <span class="n">size</span><span class="o">).</span><span class="na">size</span><span class="o">(</span><span class="n">size</span><span class="o">);</span>
+
+        <span class="c1">// 2.3.排序</span>
+        <span class="nc">String</span> <span class="n">location</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">getLocation</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">location</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">location</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">""</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">sort</span><span class="o">(</span><span class="nc">SortBuilders</span>
+                                  <span class="o">.</span><span class="na">geoDistanceSort</span><span class="o">(</span><span class="s">"location"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">GeoPoint</span><span class="o">(</span><span class="n">location</span><span class="o">))</span>
+                                  <span class="o">.</span><span class="na">order</span><span class="o">(</span><span class="nc">SortOrder</span><span class="o">.</span><span class="na">ASC</span><span class="o">)</span>
+                                  <span class="o">.</span><span class="na">unit</span><span class="o">(</span><span class="nc">DistanceUnit</span><span class="o">.</span><span class="na">KILOMETERS</span><span class="o">)</span>
+                                 <span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">// 3.发送请求</span>
+        <span class="nc">SearchResponse</span> <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="na">search</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="nc">RequestOptions</span><span class="o">.</span><span class="na">DEFAULT</span><span class="o">);</span>
+        <span class="c1">// 4.解析响应</span>
+        <span class="k">return</span> <span class="nf">handleResponse</span><span class="o">(</span><span class="n">response</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="nc">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></table></code></div></div><h3 id="435排序距离显示"><span class="mr-2">4.3.5.排序距离显示</span><a href="#435排序距离显示" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>重启服务后，测试我的酒店功能：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722100040674.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722100040674.png" alt="image-20210722100040674" class="lazyload" data-proofer-ignore></a></p><p>发现确实可以实现对我附近酒店的排序，不过并没有看到酒店到底距离我多远，这该怎么办？</p><p>排序完成后，页面还要获取我附近每个酒店的具体<strong>距离</strong>值，这个值在响应结果中是独立的：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722095648542.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722095648542.png" alt="image-20210722095648542" class="lazyload" data-proofer-ignore></a></p><p>因此，我们在结果解析阶段，除了解析source部分以外，还要得到sort部分，也就是排序的距离，然后放到响应结果中。</p><p>我们要做两件事：</p><ul><li>修改HotelDoc，添加排序距离字段，用于页面显示<li>修改HotelService类中的handleResponse方法，添加对sort值的获取</ul><p>1）修改HotelDoc类，添加距离字段</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+</pre><td class="rouge-code"><pre><span class="kn">package</span> <span class="nn">cn.itcast.hotel.pojo</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">lombok.Data</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">lombok.NoArgsConstructor</span><span class="o">;</span>
+
+
+<span class="nd">@Data</span>
+<span class="nd">@NoArgsConstructor</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">HotelDoc</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">address</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">price</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">Integer</span> <span class="n">score</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">brand</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">city</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">starName</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">business</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">location</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="nc">String</span> <span class="n">pic</span><span class="o">;</span>
+    <span class="c1">// 排序时的 距离值</span>
+    <span class="kd">private</span> <span class="nc">Object</span> <span class="n">distance</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">HotelDoc</span><span class="o">(</span><span class="nc">Hotel</span> <span class="n">hotel</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getId</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">address</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getAddress</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">price</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getPrice</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">score</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getScore</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">brand</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getBrand</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">city</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getCity</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">starName</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getStarName</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">business</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getBusiness</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">location</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getLatitude</span><span class="o">()</span> <span class="o">+</span> <span class="s">", "</span> <span class="o">+</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getLongitude</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">pic</span> <span class="o">=</span> <span class="n">hotel</span><span class="o">.</span><span class="na">getPic</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</pre></table></code></div></div><p>2）修改HotelService中的handleResponse方法</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722100613966.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722100613966.png" alt="image-20210722100613966" class="lazyload" data-proofer-ignore></a></p><p>重启后测试，发现页面能成功显示距离了：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722100838604.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722100838604.png" alt="image-20210722100838604" class="lazyload" data-proofer-ignore></a></p><h2 id="44酒店竞价排名"><span class="mr-2">4.4.酒店竞价排名</span><a href="#44酒店竞价排名" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h2><p>需求：让指定的酒店在搜索结果中排名置顶</p><h3 id="441需求分析"><span class="mr-2">4.4.1.需求分析</span><a href="#441需求分析" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>要让指定酒店在搜索结果中排名置顶，效果如图：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722100947292.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722100947292.png" alt="image-20210722100947292" class="lazyload" data-proofer-ignore></a></p><p>页面会给指定的酒店添加<strong>广告</strong>标记。</p><p>那怎样才能让指定的酒店排名置顶呢？</p><p>我们之前学习过的function_score查询可以影响算分，算分高了，自然排名也就高了。而function_score包含3个要素：</p><ul><li>过滤条件：哪些文档要加分<li>算分函数：如何计算function score<li>加权方式：function score 与 query score如何运算</ul><p>这里的需求是：让<strong>指定酒店</strong>排名靠前。因此我们需要给这些酒店添加一个标记，这样在过滤条件中就可以<strong>根据这个标记来判断，是否要提高算分</strong>。</p><p>比如，我们给酒店添加一个字段：isAD，Boolean类型：</p><ul><li>true：是广告<li>false：不是广告</ul><p>这样function_score包含3个要素就很好确定了：</p><ul><li>过滤条件：判断isAD 是否为true<li>算分函数：我们可以用最简单暴力的weight，固定加权值<li>加权方式：可以用默认的相乘，大大提高算分</ul><p>因此，业务的实现步骤包括：</p><ol><li><p>给HotelDoc类添加isAD字段，Boolean类型</p><li><p>挑选几个你喜欢的酒店，给它的文档数据添加isAD字段，值为true</p><li><p>修改search方法，添加function score功能，给isAD值为true的酒店增加权重</p></ol><h3 id="442修改hoteldoc实体"><span class="mr-2">4.4.2.修改HotelDoc实体</span><a href="#442修改hoteldoc实体" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>给<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.pojo</code>包下的HotelDoc类添加isAD字段：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722101908062.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722101908062.png" alt="image-20210722101908062" class="lazyload" data-proofer-ignore></a></p><h3 id="443添加广告标记"><span class="mr-2">4.4.3.添加广告标记</span><a href="#443添加广告标记" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>接下来，我们挑几个酒店，添加isAD字段，设置为true：</p><div class="language-json highlighter-rouge"><div class="code-header"> <span data-label-text="JSON"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre><td class="rouge-code"><pre><span class="err">POST</span><span class="w"> </span><span class="err">/hotel/_update/</span><span class="mi">1902197537</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"doc"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"isAD"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">POST</span><span class="w"> </span><span class="err">/hotel/_update/</span><span class="mi">2056126831</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"doc"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"isAD"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">POST</span><span class="w"> </span><span class="err">/hotel/_update/</span><span class="mi">1989806195</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"doc"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"isAD"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="err">POST</span><span class="w"> </span><span class="err">/hotel/_update/</span><span class="mi">2056105938</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"doc"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nl">"isAD"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table></code></div></div><h3 id="444添加算分函数查询"><span class="mr-2">4.4.4.添加算分函数查询</span><a href="#444添加算分函数查询" class="anchor text-muted"><i class="fas fa-hashtag"></i></a></h3><p>接下来我们就要修改查询条件了。之前是用的boolean 查询，现在要改成function_socre查询。</p><p>function_score查询结构如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721191544750.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210721191544750.png" alt="image-20210721191544750" class="lazyload" data-proofer-ignore></a></p><p>对应的JavaAPI如下：</p><p><a href="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722102850818.png" class="popup img-link "><img data-src="/assets/blog_res/2024-03-12-分布式搜索引擎02.assets/image-20210722102850818.png" alt="image-20210722102850818" class="lazyload" data-proofer-ignore></a></p><p>我们可以将之前写的boolean查询作为<strong>原始查询</strong>条件放到query中，接下来就是添加<strong>过滤条件</strong>、<strong>算分函数</strong>、<strong>加权模式</strong>了。所以原来的代码依然可以沿用。</p><p>修改<code class="language-plaintext highlighter-rouge">cn.itcast.hotel.service.impl</code>包下的<code class="language-plaintext highlighter-rouge">HotelService</code>类中的<code class="language-plaintext highlighter-rouge">buildBasicQuery</code>方法，添加算分函数查询：</p><div class="language-java highlighter-rouge"><div class="code-header"> <span data-label-text="Java"><i class="fas fa-code small"></i></span> <button aria-label="copy" data-title-succeed="已复制！"><i class="far fa-clipboard"></i></button></div><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+</pre><td class="rouge-code"><pre><span class="kd">private</span> <span class="kt">void</span> <span class="nf">buildBasicQuery</span><span class="o">(</span><span class="nc">RequestParams</span> <span class="n">params</span><span class="o">,</span> <span class="nc">SearchRequest</span> <span class="n">request</span><span class="o">)</span> <span class="o">{</span>
+    <span class="c1">// 1.构建BooleanQuery</span>
+    <span class="nc">BoolQueryBuilder</span> <span class="n">boolQuery</span> <span class="o">=</span> <span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">boolQuery</span><span class="o">();</span>
+    <span class="c1">// 关键字搜索</span>
+    <span class="nc">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">getKey</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">key</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="s">""</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">must</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchAllQuery</span><span class="o">());</span>
+    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">must</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">matchQuery</span><span class="o">(</span><span class="s">"all"</span><span class="o">,</span> <span class="n">key</span><span class="o">));</span>
+    <span class="o">}</span>
+    <span class="c1">// 城市条件</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getCity</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">params</span><span class="o">.</span><span class="na">getCity</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">""</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">termQuery</span><span class="o">(</span><span class="s">"city"</span><span class="o">,</span> <span class="n">params</span><span class="o">.</span><span class="na">getCity</span><span class="o">()));</span>
+    <span class="o">}</span>
+    <span class="c1">// 品牌条件</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getBrand</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">params</span><span class="o">.</span><span class="na">getBrand</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">""</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">termQuery</span><span class="o">(</span><span class="s">"brand"</span><span class="o">,</span> <span class="n">params</span><span class="o">.</span><span class="na">getBrand</span><span class="o">()));</span>
+    <span class="o">}</span>
+    <span class="c1">// 星级条件</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getStarName</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">params</span><span class="o">.</span><span class="na">getStarName</span><span class="o">().</span><span class="na">equals</span><span class="o">(</span><span class="s">""</span><span class="o">))</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">termQuery</span><span class="o">(</span><span class="s">"starName"</span><span class="o">,</span> <span class="n">params</span><span class="o">.</span><span class="na">getStarName</span><span class="o">()));</span>
+    <span class="o">}</span>
+    <span class="c1">// 价格</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getMinPrice</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">params</span><span class="o">.</span><span class="na">getMaxPrice</span><span class="o">()</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">boolQuery</span><span class="o">.</span><span class="na">filter</span><span class="o">(</span><span class="nc">QueryBuilders</span>
+                         <span class="o">.</span><span class="na">rangeQuery</span><span class="o">(</span><span class="s">"price"</span><span class="o">)</span>
+                         <span class="o">.</span><span class="na">gte</span><span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getMinPrice</span><span class="o">())</span>
+                         <span class="o">.</span><span class="na">lte</span><span class="o">(</span><span class="n">params</span><span class="o">.</span><span class="na">getMaxPrice</span><span class="o">())</span>
+                        <span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 2.算分控制</span>
+    <span class="nc">FunctionScoreQueryBuilder</span> <span class="n">functionScoreQuery</span> <span class="o">=</span>
+        <span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">functionScoreQuery</span><span class="o">(</span>
+        <span class="c1">// 原始查询，相关性算分的查询</span>
+        <span class="n">boolQuery</span><span class="o">,</span>
+        <span class="c1">// function score的数组</span>
+        <span class="k">new</span> <span class="nc">FunctionScoreQueryBuilder</span><span class="o">.</span><span class="na">FilterFunctionBuilder</span><span class="o">[]{</span>
+            <span class="c1">// 其中的一个function score 元素</span>
+            <span class="k">new</span> <span class="nc">FunctionScoreQueryBuilder</span><span class="o">.</span><span class="na">FilterFunctionBuilder</span><span class="o">(</span>
+                <span class="c1">// 过滤条件</span>
+                <span class="nc">QueryBuilders</span><span class="o">.</span><span class="na">termQuery</span><span class="o">(</span><span class="s">"isAD"</span><span class="o">,</span> <span class="kc">true</span><span class="o">),</span>
+                <span class="c1">// 算分函数</span>
+                <span class="nc">ScoreFunctionBuilders</span><span class="o">.</span><span class="na">weightFactorFunction</span><span class="o">(</span><span class="mi">10</span><span class="o">)</span>
+            <span class="o">)</span>
+        <span class="o">});</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">source</span><span class="o">().</span><span class="na">query</span><span class="o">(</span><span class="n">functionScoreQuery</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></table></code></div></div></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/'>微服务</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/%E5%AD%A6%E4%B9%A0/" class="post-tag no-text-decoration" >学习</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> 本文由作者按照 <a href="https://creativecommons.org/licenses/by/4.0/"> CC BY 4.0 </a> 进行授权</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">分享</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E02%20-%20%E5%B0%8F%E7%89%9B&url=%2Fposts%2F%25E5%2588%2586%25E5%25B8%2583%25E5%25BC%258F%25E6%2590%259C%25E7%25B4%25A2%25E5%25BC%2595%25E6%2593%258E02%2F" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E02%20-%20%E5%B0%8F%E7%89%9B&u=%2Fposts%2F%25E5%2588%2586%25E5%25B8%2583%25E5%25BC%258F%25E6%2590%259C%25E7%25B4%25A2%25E5%25BC%2595%25E6%2593%258E02%2F" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://t.me/share/url?url=%2Fposts%2F%25E5%2588%2586%25E5%25B8%2583%25E5%25BC%258F%25E6%2590%259C%25E7%25B4%25A2%25E5%25BC%2595%25E6%2593%258E02%2F&text=%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E02%20-%20%E5%B0%8F%E7%89%9B" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i id="copy-link" class="fa-fw fas fa-link small" data-toggle="tooltip" data-placement="top" title="分享链接" data-title-succeed="链接已复制！"> </i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted"><div class="access"><div id="access-lastmod" class="post"><div class="panel-heading">最近更新</div><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/MVCC/">MVCC</a><li><a href="/posts/Redis/">Redis</a><li><a href="/posts/JAVA%E5%9F%BA%E7%A1%80/">JAVA基础</a><li><a href="/posts/%E9%9D%A2%E8%AF%95/">面试题总结</a><li><a href="/posts/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%80/">微服务一Nacos</a></ul></div><div id="access-tags"><div class="panel-heading">热门标签</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/%E5%AD%A6%E4%B9%A0/">学习</a></div></div></div><div id="toc-wrapper" class="pl-0 pr-4 mb-5"><div class="panel-heading pl-3 pt-2 mb-2">文章内容</div><nav id="toc"></nav></div><script src="https://cdn.jsdelivr.net/npm/tocbot@4.20.1/dist/tocbot.min.js"></script></div></div><div class="row"><div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 pl-3 pr-3 pr-xl-4 mt-5"><div id="related-posts" class="mb-2 mb-sm-4"><h3 class="pt-2 mb-4 ml-1" data-toc-skip>相关文章</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/MySQL/"><div class="card-body"> <em class="small" data-ts="1710124440" data-df="YYYY/MM/DD" > 2024/03/11 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Mysql</h3><div class="text-muted small"><p> 1.存储引擎–视频地址：https://www.bilibili.com/video/BV1Kr4y1i7ru/ 1.存储引擎就是存储数据、建立索引、更新/查询数据等技术的实现方式。存储引擎是基于表的，而不是基于库的，所以存储引擎也可被 称为表类型。 2.存储引擎的特点 事务的四大特性 acid 原子性 隔离性 一致性 持久性 3.索引概述 介绍 索引(index...</p></div></div></a></div><div class="card"> <a href="/posts/JAVA%E5%9F%BA%E7%A1%80/"><div class="card-body"> <em class="small" data-ts="1704162840" data-df="YYYY/MM/DD" > 2024/01/02 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>JAVA基础</h3><div class="text-muted small"><p> 1.IDEA常用快捷键 2.匿名内部类 3.枚举 4.泛型 自定义泛型类 实际实现 泛型 接口 5.接口 接口的好处 这里new的不是接口，而是A的实例，前面指的是定义了一个接口变量，后面指的是用A的实例（对象）去指向改接口变量。简而言之，接口不能实例化对象，但是可以创建一个变量，让他的实现类的实例指向...</p></div></div></a></div><div class="card"> <a href="/posts/git%E5%91%BD%E4%BB%A4%E7%9A%84%E4%BD%BF%E7%94%A8/"><div class="card-body"> <em class="small" data-ts="1704249240" data-df="YYYY/MM/DD" > 2024/01/03 </em><h3 class="pt-0 mt-1 mb-3" data-toc-skip>git命令的使用</h3><div class="text-muted small"><p> git几种状态 git reset的三种模式 git reset – soft 工作区和暂存区回说某一个版本，不会删除工作区和暂存区的内容 git reset –hard 工作区和暂存区回溯上某个版本，会删除工作区和暂存区的内容 git reset – mixed 工作区和暂存区回溯上某个版本，不会删除工作区的内容，但会删除暂存区的内容 git diff的使用...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E01/" class="btn btn-outline-primary" prompt="上一篇"><p>分布式搜索引擎01</p></a> <a href="/posts/%E5%88%86%E5%B8%83%E5%BC%8F%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E03/" class="btn btn-outline-primary" prompt="下一篇"><p>分布式搜索引擎03</p></a></div></div></div></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-sm-11 post-content"><div id="search-hints"><div id="access-tags"><div class="panel-heading">热门标签</div><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/%E5%AD%A6%E4%B9%A0/">学习</a></div></div></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><footer><div class="container pl-lg-4 pr-lg-4"><div class="d-flex justify-content-between align-items-center text-muted ml-md-3 mr-md-3"><div class="footer-left"><p class="mb-0"> © 2024 <a href="https://twitter.com/littleWang1">小牛</a>. <span data-toggle="tooltip" data-placement="top" title="除非另有说明，本网站上的博客文章均由作者按照知识共享署名 4.0 国际 (CC BY 4.0) 许可协议进行授权。">保留部分权利。</span></p></div><div class="footer-right"><p class="mb-0">本站由 <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> 生成，采用 <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> 主题。</p></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js"></script> <script> (function () { function updateMermaid(event) { if (event.source === window && event.data && event.data.direction === ModeToggle.ID) { const mode = event.data.message; if (typeof mermaid === "undefined") { return; } let expectedTheme = (mode === ModeToggle.DARK_MODE ? "dark" : "default"); let config = {theme: expectedTheme}; /* Re-render the SVG › <https://github.com/mermaid-js/mermaid/issues/311#issuecomment-332557344> */ $(".mermaid").each(function () { let svgCode = $(this).prev().children().html(); $(this).removeAttr("data-processed"); $(this).html(svgCode); }); mermaid.initialize(config); mermaid.init(undefined, ".mermaid"); } } let initTheme = "default"; if ($("html[data-mode=dark]").length > 0 || ($("html[data-mode]").length == 0 && window.matchMedia("(prefers-color-scheme: dark)").matches)) { initTheme = "dark"; } let mermaidConf = { theme: initTheme /* <default|dark|forest|neutral> */ }; /* Create mermaid tag */ $("pre").has("code.language-mermaid").each(function () { let svgCode = $(this).children().html(); $(this).addClass("unloaded"); $(this).after(`<pre class=\"mermaid\">${svgCode}</pre>`); }); mermaid.initialize(mermaidConf); window.addEventListener("message", updateMermaid); })(); </script><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"> {categories} {tags}</div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">搜索结果为空</p>', templateMiddleware: function(prop, value, template) { if (prop === 'categories') { if (value === '') { return `${value}`; } else { return `<div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`; } } if (prop === 'tags') { if (value === '') { return `${value}`; } else { return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`; } } } }); </script> <script src="https://cdn.jsdelivr.net/combine/npm/magnific-popup@1/dist/jquery.magnific-popup.min.js,npm/lazysizes@5.3.2/lazysizes.min.js,npm/clipboard@2/dist/clipboard.min.js"></script> <script src="https://cdn.jsdelivr.net/combine/npm/dayjs@1/dayjs.min.js,npm/dayjs@1/locale/zh.min.js,npm/dayjs@1/plugin/relativeTime.min.js,npm/dayjs@1/plugin/localizedFormat.min.js"></script> <script defer src="/assets/js/dist/post.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script> <script defer src="/unregister.js"></script>
